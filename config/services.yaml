@@ -6,18 +6,6 @@ services:
         autowire: false
         autoconfigure: false
 
-    connection.dbal:
-        class: Doctrine\DBAL\Connection
-        factory: 'Doctrine\DBAL\DriverManager::getConnection'
-        arguments:
-            - url: '%db_url%'
-              driver: 'pdo_pgsql'
-
-    migration.dbal:
-        class: DemigrantSoft\Infrastructure\Persistence\Repository\DbalMigration
-        arguments:
-            - '@connection.dbal'
-
     client.http.steam:
         class: DemigrantSoft\Infrastructure\Steam\SteamClient
         arguments:
@@ -30,11 +18,35 @@ services:
             - '%env(TELEGRAM_GROUP_CHAT_ID)%'
             - '%env(TELEGRAM_ADMIN_CHAT_ID)%'
 
+    connection.dbal:
+        class: Doctrine\DBAL\Connection
+        factory: 'Doctrine\DBAL\DriverManager::getConnection'
+        arguments:
+            - url: '%db_url%'
+              driver: 'pdo_pgsql'
+
+    migration.dbal:
+        class: DemigrantSoft\Infrastructure\Persistence\Repository\DbalMigration
+        arguments:
+            - '@connection.dbal'
+
+    repository.dbal:
+        class: DemigrantSoft\Infrastructure\Persistence\Repository\DbalRepository
+        arguments:
+            - '@connection.dbal'
+
+    repository.app.dbal:
+        class: DemigrantSoft\Infrastructure\Persistence\Repository\App\AppDbalRepository
+        parent: repository.dbal
+        autowire: false
+        autoconfigure: false
+
     command.check:
         class: DemigrantSoft\Entrypoint\Command\CheckNewGamesCommand
         arguments:
             - '@client.http.steam'
             - '@client.communication.telegram'
+            - '@repository.app.dbal'
             - '%env(STEAM_ID_64)%'
         tags:
             - { name: console.command, command: 'dms:game-check' }

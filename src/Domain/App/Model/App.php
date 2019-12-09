@@ -21,4 +21,24 @@ final class App
     {
         return new self($appid, $type, $name, $header);
     }
+
+    public function appid(): int
+    {
+        return $this->appid;
+    }
+
+    public function type(): string
+    {
+        return $this->type;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function header(): string
+    {
+        return $this->header;
+    }
 }

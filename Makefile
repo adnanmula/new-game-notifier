@@ -26,6 +26,10 @@ down: ## down all containers
 install: ## composer install for php container
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/composer.phar install"
 
+.PHONY: init
+init: ## run migrations
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console dms:init"
+
 .PHONY: ps
 ps: ## status from all containers
 	docker-compose -f ${FILE} ps

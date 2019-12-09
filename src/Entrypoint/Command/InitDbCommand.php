@@ -32,6 +32,6 @@ final class InitDbCommand extends Command
             $output->writeln(get_class($migration) . ' executed');
         }
 
-        return 1;
+        return 0;
     }
 }

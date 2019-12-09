@@ -33,10 +33,10 @@ final class SteamClient extends Client
             ]
         );
 
-        return json_decode($response->getBody()->getContents(), true)['response'];
+        return \json_decode($response->getBody()->getContents(), true)['response'];
     }
 
-    public function appInfo(int $appid): App
+    public function appInfo(int $appid): ?App
     {
         $response = $this->get(self::URL_STOREFRONT_API . self::ENDPOINT_GAME_INFO, [
                 RequestOptions::QUERY => [
@@ -44,13 +44,18 @@ final class SteamClient extends Client
                 ],
             ]
         );
-        $result = json_decode($response->getBody()->getContents(), true)[(string) $appid]['data'];
+
+        $rawResponse = \json_decode($response->getBody()->getContents(), true)[(string) $appid];
+
+        if (false === $rawResponse['success']) {
+            return null;
+        }
 
         return App::create(
-            $result['steam_appid'],
-            $result['type'],
-            $result['name'],
-            $result['header_image'],
+            $rawResponse['data']['steam_appid'],
+            $rawResponse['data']['type'],
+            $rawResponse['data']['name'],
+            $rawResponse['data']['header_image'],
         );
     }
 }
