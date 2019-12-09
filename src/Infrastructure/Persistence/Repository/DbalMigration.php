@@ -25,19 +25,10 @@ final class DbalMigration implements Migration
                 PRIMARY KEY(app_id)
             )'
         );
-
-        $this->connection->exec('
-          CREATE TABLE owned_apps (
-                user_id int NOT NULL,
-                app_id int NOT NULL,
-                PRIMARY KEY(user_id, app_id)
-            )'
-        );
     }
 
     public function down(): void
     {
         $this->connection->exec('DROP TABLE IF EXISTS app');
-        $this->connection->exec('DROP TABLE IF EXISTS owned_apps');
     }
 }

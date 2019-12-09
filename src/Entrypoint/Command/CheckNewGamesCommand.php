@@ -3,6 +3,7 @@
 namespace DemigrantSoft\Entrypoint\Command;
 
 use DemigrantSoft\Domain\App\AppRepository;
+use DemigrantSoft\Domain\App\Model\App;
 use DemigrantSoft\Domain\Communication\CommunicationClient;
 use DemigrantSoft\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Command\Command;
@@ -40,6 +41,7 @@ class CheckNewGamesCommand extends Command
         $ownedGames = $this->client->ownedGames($this->userId);
 
         if (false === isset($ownedGames['games'])) {
+            $this->communicationClient->log('Fallo en GetOwnedGames');
             return 0;
         }
 
@@ -47,16 +49,37 @@ class CheckNewGamesCommand extends Command
             \array_map(fn($game) => $game['appid'], $ownedGames['games'])
         );
 
+        $toNotify = [];
         \array_walk(
             $missingApps,
-            function ($missing) {
+            function ($missing) use (&$toNotify) {
                 $app = $this->client->appInfo($missing);
                 if ($app) {
                     $this->appRepository->save($this->client->appInfo($missing));
+
+                    $toNotify[] = $app;
                 }
             }
         );
 
+        if (count($toNotify) > 0) {
+            $this->notifyNewGames($toNotify);
+        }
+
         return 0;
+    }
+
+    private function notifyNewGames(array $toNotify): void
+    {
+        $this->communicationClient->say('Nuevos juegos!');
+
+        /** @var App $app */
+        foreach ($toNotify as $app) {
+            $this->communicationClient->say(
+                $app->name() . PHP_EOL
+                . 'https://store.steampowered.com/app/' . $app->appid() . PHP_EOL
+                . $app->header() . PHP_EOL
+            );
+        }
     }
 }
