@@ -26,8 +26,15 @@ class CheckNewGamesCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->setDescription('Check new games added');
+    }
+
     public function execute(InputInterface $input, OutputInterface $output): void
     {
-        $this->client->ownedGames($this->userId);
+        $ownedGames = $this->client->ownedGames($this->userId);
+
+        dump($ownedGames);die;
     }
 }

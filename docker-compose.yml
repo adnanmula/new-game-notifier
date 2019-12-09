@@ -11,7 +11,7 @@ services:
     networks:
       - network_ngn
 
-  postgres_write:
+  postgres:
     image: postgres:11.1-alpine
     container_name: ngn_postgres
     ports:

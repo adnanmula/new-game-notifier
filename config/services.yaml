@@ -1,9 +1,22 @@
 parameters:
+    db_url: postgresql://postgres:root@postgres/postgres
 
 services:
     _defaults:
         autowire: false
         autoconfigure: false
+
+    connection.dbal:
+        class: Doctrine\DBAL\Connection
+        factory: 'Doctrine\DBAL\DriverManager::getConnection'
+        arguments:
+            - url: '%db_url%'
+              driver: 'pdo_pgsql'
+
+    migration.dbal:
+        class: DemigrantSoft\Infrastructure\Persistence\Repository\DbalMigration
+        arguments:
+            - '@connection.dbal'
 
     client.http.steam:
         class: DemigrantSoft\Infrastructure\Steam\SteamClient
@@ -24,4 +37,11 @@ services:
             - '@client.communication.telegram'
             - '%env(STEAM_ID_64)%'
         tags:
-            - { name: console.command, command: 'game:check' }
+            - { name: console.command, command: 'dms:game-check' }
+
+    command.init:
+        class: DemigrantSoft\Entrypoint\Command\InitDbCommand
+        arguments:
+            - '@migration.dbal'
+        tags:
+            - { name: console.command, command: 'dms:init-db' }
