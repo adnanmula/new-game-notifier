@@ -18,30 +18,26 @@ final class DbalMigration implements Migration
     {
         $this->connection->exec('
           CREATE TABLE app (
-                appid UUID NOT NULL,
-                username character varying(128) NOT NULL,
-                password character varying(128) NOT NULL,
-                PRIMARY KEY(id)
+                app_id int NOT NULL,
+                type character varying(128) NOT NULL,
+                name character varying(128) NOT NULL,
+                header_image character varying(128) NOT NULL,
+                PRIMARY KEY(app_id)
             )'
         );
 
-        $this->connection->exec('ALTER TABLE users ADD CONSTRAINT "users_unique_username" UNIQUE ("username")');
-
         $this->connection->exec('
-          CREATE TABLE scenario_invitations (
-                user_id uuid NOT NULL,
-                scenario_id uuid NOT NULL,
-                status character varying(128) NOT NULL,
-                date timestamp without time zone NOT NULL,
-                date_joined timestamp without time zone,
-                PRIMARY KEY(user_id, scenario_id)
+          CREATE TABLE owned_apps (
+                user_id int NOT NULL,
+                app_id int NOT NULL,
+                PRIMARY KEY(user_id, app_id)
             )'
         );
     }
 
     public function down(): void
     {
-        $this->connection->exec('DROP TABLE IF EXISTS users');
-        $this->connection->exec('DROP TABLE IF EXISTS scenario_invitations');
+        $this->connection->exec('DROP TABLE IF EXISTS app');
+        $this->connection->exec('DROP TABLE IF EXISTS owned_apps');
     }
 }

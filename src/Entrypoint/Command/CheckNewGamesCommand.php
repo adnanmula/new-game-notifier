@@ -35,6 +35,6 @@ class CheckNewGamesCommand extends Command
     {
         $ownedGames = $this->client->ownedGames($this->userId);
 
-        dump($ownedGames);die;
+        $this->client->appInfo($ownedGames['games'][0]['appid']);
     }
 }

@@ -18,6 +18,8 @@ final class SteamClient extends Client
     public function __construct(string $apiKey)
     {
         $this->apiKey = $apiKey;
+
+        parent::__construct([]);
     }
 
     public function ownedGames(string $userId): array
@@ -31,7 +33,7 @@ final class SteamClient extends Client
             ]
         );
 
-        return json_decode($response->getBody()->getContents(), true);
+        return json_decode($response->getBody()->getContents(), true)['response'];
     }
 
     public function appInfo(int $appid): App
