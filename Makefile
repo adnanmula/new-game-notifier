@@ -22,6 +22,10 @@ stop: ## stop all containers
 down: ## down all containers
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} down
 
+.PHONY: check
+check: ## check games command, t=false to disable telegram notifications
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console dms:game-check -t $(t)"
+
 .PHONY: install
 install: ## composer install for php container
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/composer.phar install"

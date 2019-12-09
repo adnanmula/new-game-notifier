@@ -8,6 +8,7 @@ use DemigrantSoft\Domain\Communication\CommunicationClient;
 use DemigrantSoft\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CheckNewGamesCommand extends Command
@@ -33,7 +34,10 @@ class CheckNewGamesCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Check new games added');
+        $this
+            ->setDescription('Check new games added')
+            ->addOption('notifications', 't', InputOption::VALUE_OPTIONAL, 'Telegram notifications', false);
+
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -62,7 +66,7 @@ class CheckNewGamesCommand extends Command
             }
         );
 
-        if (count($toNotify) > 0) {
+        if ($this->notificationsEnabled($input) && count($toNotify) > 0) {
             $this->notifyNewGames($toNotify);
         }
 
@@ -81,5 +85,14 @@ class CheckNewGamesCommand extends Command
                 . $app->header() . PHP_EOL
             );
         }
+    }
+
+    private function notificationsEnabled(InputInterface $input): bool
+    {
+        if (true === $input->hasParameterOption(['--notifications', '-t'])) {
+            return $input->getOption('notifications') === 'true' || $input->getOption('notifications') === null ;
+        }
+
+        return true;
     }
 }
