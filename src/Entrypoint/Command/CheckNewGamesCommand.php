@@ -57,11 +57,11 @@ final class CheckNewGamesCommand extends Command
         $toNotify = [];
         \array_walk(
             $missingApps,
-            function ($missing) use (&$toNotify) {
+            function ($missing) use (&$toNotify, $output) {
                 $app = $this->client->appInfo($missing);
                 if ($app) {
                     $this->appRepository->save($app);
-
+                    $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
                     $toNotify[] = $app;
                 }
             }
