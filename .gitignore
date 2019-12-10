@@ -16,7 +16,5 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+/report/
 ###< phpunit/phpunit ###
-
-/report
-/public/report

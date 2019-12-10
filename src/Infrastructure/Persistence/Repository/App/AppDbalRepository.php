@@ -8,13 +8,13 @@ use DemigrantSoft\Infrastructure\Persistence\Repository\DbalRepository;
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
 {
-    private const APP_TABLE = 'app';
+    private const TABLE = 'app';
 
     public function app(int $appId): ?App
     {
         $result = $this->connection->createQueryBuilder()
             ->select('a.app_id, a.type, a.name, a.header_image')
-            ->from(self::APP_TABLE, 'a')
+            ->from(self::TABLE, 'a')
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
             ->execute()
@@ -31,7 +31,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     {
         $ids = $this->connection->createQueryBuilder()
             ->select('a.app_id')
-            ->from(self::APP_TABLE, 'a')
+            ->from(self::TABLE, 'a')
             ->execute()
             ->fetchAll();
 
@@ -44,12 +44,26 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
 
     public function save(App $app): void
     {
-        $stmt = $this->connection->prepare('INSERT into app (app_id, type, name, header_image) values (:app_id, :type, :name, :header_image)');
+        $stmt = $this->connection->prepare(
+            \sprintf(
+                '
+                    INSERT INTO %s
+                    (app_id, type, name, header_image)
+                    VALUES (:app_id, :type, :name, :header_image)
+                    ON CONFLICT (app_id) DO UPDATE SET 
+                    app_id = :app_id,
+                    type = :type,
+                    name = :name,
+                    header_image = :header_image
+                    ',
+                self::TABLE
+            )
+        );
 
-        $stmt->bindValue('app_id', $app->appid());
-        $stmt->bindValue('type', $app->type());
-        $stmt->bindValue('name', $app->name());
-        $stmt->bindValue('header_image', $app->header());
+        $stmt->bindValue('app_id', $app->appid(), \PDO::PARAM_INT);
+        $stmt->bindValue('type', $app->type(), \PDO::PARAM_STR);
+        $stmt->bindValue('name', $app->name(), \PDO::PARAM_STR);
+        $stmt->bindValue('header_image', $app->header(), \PDO::PARAM_STR);
 
         $stmt->execute();
     }
