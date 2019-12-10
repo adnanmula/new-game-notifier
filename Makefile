@@ -34,6 +34,10 @@ install: ## composer install for php container
 init: ## run migrations
 	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console dms:init"
 
+.PHONY: tests
+tests: ## execute project unit tests
+	docker-compose -f ${FILE} exec --user=${UID} php sh -c "phpunit --order=random"
+
 .PHONY: ps
 ps: ## status from all containers
 	docker-compose -f ${FILE} ps

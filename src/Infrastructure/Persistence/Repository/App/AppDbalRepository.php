@@ -9,7 +9,6 @@ use DemigrantSoft\Infrastructure\Persistence\Repository\DbalRepository;
 final class AppDbalRepository extends DbalRepository implements AppRepository
 {
     private const APP_TABLE = 'app';
-    private const OWNED_APPS_TABLE = 'owned_apps';
 
     public function app(int $appId): ?App
     {
@@ -28,22 +27,19 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         return $this->map($result);
     }
 
-    public function missing(array $appIds): array
+    public function all(array $appIds): array
     {
-        $savedApps = $this->connection->createQueryBuilder()
+        $ids = $this->connection->createQueryBuilder()
             ->select('a.app_id')
             ->from(self::APP_TABLE, 'a')
             ->execute()
             ->fetchAll();
 
-        if (false === $savedApps) {
+        if (false === $ids) {
             return [];
         }
 
-        return \array_diff(
-            $appIds,
-            \array_map(fn($app) => $app['app_id'], $savedApps)
-        );
+        return \array_map(fn($app) => $app['app_id'], $ids);
     }
 
     public function save(App $app): void

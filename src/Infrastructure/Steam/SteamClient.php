@@ -6,7 +6,7 @@ use DemigrantSoft\Domain\App\Model\App;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
-final class SteamClient extends Client
+class SteamClient extends Client
 {
     private const URL_API = 'http://api.steampowered.com/';
     private const URL_STOREFRONT_API = 'https://store.steampowered.com/';

@@ -46,11 +46,12 @@ class CheckNewGamesCommand extends Command
 
         if (false === isset($ownedGames['games'])) {
             $this->communicationClient->log('Fallo en GetOwnedGames');
-            return 0;
+            return 1;
         }
 
-        $missingApps = $this->appRepository->missing(
-            \array_map(fn($game) => $game['appid'], $ownedGames['games'])
+        $missingApps = \array_diff(
+            \array_map(fn($game) => $game['appid'], $ownedGames['games']),
+            $this->appRepository->all(\array_map(fn($game) => $game['appid'], $ownedGames['games']))
         );
 
         $toNotify = [];
@@ -59,7 +60,7 @@ class CheckNewGamesCommand extends Command
             function ($missing) use (&$toNotify) {
                 $app = $this->client->appInfo($missing);
                 if ($app) {
-                    $this->appRepository->save($this->client->appInfo($missing));
+                    $this->appRepository->save($app);
 
                     $toNotify[] = $app;
                 }
