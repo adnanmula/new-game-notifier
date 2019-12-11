@@ -24,5 +24,5 @@ docker-compose exec php sh -c "php bin/console dms:game-check -t false"
 ```
 Then set up the check command in crontab.
 ```bash
-0 * * * * docker-compose exec php sh -c "php bin/console dms:game-check"
+0 * * * * docker-compose exec -T php sh -c "php bin/console dms:game-check"
 ```
