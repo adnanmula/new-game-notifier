@@ -89,7 +89,7 @@ final class CheckNewGamesCommand extends Command
 
         /** @var App $app */
         foreach ($toNotify as $app) {
-            $this->communicationClient->log('[' . $app->name() . ']' . '(' . $app->url() . ')');
+            $this->communicationClient->say('[' . $app->name() . ']' . '(' . $app->url() . ')');
         }
     }
 
