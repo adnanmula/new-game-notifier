@@ -37,6 +37,11 @@ final class App
         return $this->name;
     }
 
+    public function url(): string
+    {
+        return 'https://store.steampowered.com/app/' . $this->appid;
+    }
+
     public function header(): string
     {
         return $this->header;

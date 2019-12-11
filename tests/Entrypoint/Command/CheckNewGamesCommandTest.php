@@ -193,4 +193,49 @@ final class CheckNewGamesCommandTest extends TestCase
 
         $this->assertEquals(1, $result);
     }
+
+    /** @test */
+    public function given_missing_games_with_changed_appid_then_save_placeholders(): void
+    {
+        $this->client->expects($this->once())
+            ->method('ownedGames')
+            ->with($this->userId)
+            ->willReturn([
+                'game_count' => 1,
+                'games' => [
+                    ['appid' => 20],
+                    ['appid' => 30],
+                    ['appid' => 40],
+                ]
+            ]);
+
+        $this->appRepository->expects($this->once())
+            ->method('all')
+            ->willReturn([]);
+
+        $app = App::create(21, 'game', 'name', 'img');
+        $app2 = App::create(31, 'game2', 'name2', 'img2');
+        $app3 = App::create(41, 'game3', 'name3', 'img3');
+
+        $this->client->expects($this->exactly(3))
+            ->method('appInfo')
+            ->withConsecutive([20], [30], [40])
+            ->willReturnOnConsecutiveCalls($app, $app2, $app3);
+
+        $this->appRepository->expects($this->exactly(6))
+            ->method('save')
+            ->withConsecutive(
+                [App::create(20, 'placeholder', '', '')],
+                [$app],
+                [App::create(30, 'placeholder', '', '')],
+                [$app2],
+                [App::create(40, 'placeholder', '', '')],
+                [$app3],
+            );
+
+        $commandTester = new CommandTester($this->command);
+        $result = $commandTester->execute(['-t' => 'false']);
+
+        $this->assertEquals(0, $result);
+    }
 }

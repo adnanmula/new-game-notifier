@@ -59,10 +59,19 @@ final class CheckNewGamesCommand extends Command
             $missingApps,
             function ($missing) use (&$toNotify, $output) {
                 $app = $this->client->appInfo($missing);
+
                 if ($app) {
+                    if ($missing !== $app->appid()) {
+                        $this->appRepository->save(App::create($missing, 'placeholder', '', ''));
+                        $output->writeln($missing . ': ' . 'PLACEHOLDER' . ' saved.');
+                    }
+
                     $this->appRepository->save($app);
                     $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
                     $toNotify[] = $app;
+                } else {
+                    $this->appRepository->save(App::create($missing, 'removed', '', ''));
+                    $output->writeln($missing . ': ' . 'REMOVED_APP' . ' saved.');
                 }
             }
         );
@@ -82,7 +91,7 @@ final class CheckNewGamesCommand extends Command
         foreach ($toNotify as $app) {
             $this->communicationClient->say(
                 $app->name() . PHP_EOL
-                . 'https://store.steampowered.com/app/' . $app->appid() . PHP_EOL
+                . $app->url() . PHP_EOL
                 . $app->header() . PHP_EOL
             );
         }
