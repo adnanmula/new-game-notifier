@@ -89,11 +89,7 @@ final class CheckNewGamesCommand extends Command
 
         /** @var App $app */
         foreach ($toNotify as $app) {
-            $this->communicationClient->say(
-                $app->name() . PHP_EOL
-                . $app->url() . PHP_EOL
-                . $app->header() . PHP_EOL
-            );
+            $this->communicationClient->log('[' . $app->name() . ']' . '(' . $app->url() . ')');
         }
     }
 
