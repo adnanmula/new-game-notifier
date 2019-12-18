@@ -13,7 +13,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     public function app(int $appId): ?App
     {
         $result = $this->connection->createQueryBuilder()
-            ->select('a.app_id, a.type, a.name, a.header_image')
+            ->select('a.app_id, a.name, a.icon, a.header')
             ->from(self::TABLE, 'a')
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
@@ -48,22 +48,22 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             \sprintf(
                 '
                     INSERT INTO %s
-                    (app_id, type, name, header_image)
-                    VALUES (:app_id, :type, :name, :header_image)
+                    (app_id, name, icon, header)
+                    VALUES (:app_id, :name, :icon, :header)
                     ON CONFLICT (app_id) DO UPDATE SET 
                     app_id = :app_id,
-                    type = :type,
                     name = :name,
-                    header_image = :header_image
+                    icon = :icon,
+                    header = :header
                     ',
                 self::TABLE
             )
         );
 
         $stmt->bindValue('app_id', $app->appid(), \PDO::PARAM_INT);
-        $stmt->bindValue('type', $app->type(), \PDO::PARAM_STR);
         $stmt->bindValue('name', $app->name(), \PDO::PARAM_STR);
-        $stmt->bindValue('header_image', $app->header(), \PDO::PARAM_STR);
+        $stmt->bindValue('icon', $app->icon(), \PDO::PARAM_STR);
+        $stmt->bindValue('header', $app->header(), \PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -72,9 +72,9 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     {
         return App::create(
             $result['app_id'],
-            $result['type'],
             $result['name'],
-            $result['header_image']
+            $result['icon'],
+            $result['header']
         );
     }
 }

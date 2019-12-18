@@ -19,9 +19,9 @@ final class DbalMigration implements Migration
         $this->connection->exec('
           CREATE TABLE app (
                 app_id int NOT NULL,
-                type character varying(128) NOT NULL,
                 name character varying(128) NOT NULL,
-                header_image character varying(128) NOT NULL,
+                icon character varying(128) NOT NULL,
+                header character varying(128) NOT NULL,
                 PRIMARY KEY(app_id)
             )'
         );

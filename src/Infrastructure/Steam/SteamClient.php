@@ -29,6 +29,7 @@ class SteamClient extends Client
                     'key' => $this->apiKey,
                     'steamid' => $userId,
                     'format' => 'json',
+                    'include_appinfo' => true
                 ],
             ]
         );

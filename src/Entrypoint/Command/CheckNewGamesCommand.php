@@ -49,30 +49,31 @@ final class CheckNewGamesCommand extends Command
             return 1;
         }
 
+        $mappedOwnedApps = [];
+        foreach ($ownedGames['games'] as $game) {
+            $mappedOwnedApps[$game['appid']] = $game;
+        }
+
         $missingApps = \array_diff(
-            \array_map(fn($game) => $game['appid'], $ownedGames['games']),
-            $this->appRepository->all(\array_map(fn($game) => $game['appid'], $ownedGames['games']))
+            \array_keys($mappedOwnedApps),
+            $this->appRepository->all(\array_map(fn(array $game) => $game['appid'], $ownedGames['games']))
         );
 
         $toNotify = [];
         \array_walk(
             $missingApps,
-            function ($missing) use (&$toNotify, $output) {
-                $app = $this->client->appInfo($missing);
+            function (int $missing) use ($mappedOwnedApps, &$toNotify, $output) {
+                $app = App::create(
+                    $mappedOwnedApps[$missing]['appid'],
+                    $mappedOwnedApps[$missing]['name'],
+                    $mappedOwnedApps[$missing]['img_icon_url'],
+                    $mappedOwnedApps[$missing]['img_logo_url']
+                );
 
-                if ($app) {
-                    if ($missing !== $app->appid()) {
-                        $this->appRepository->save(App::create($missing, 'placeholder', '', ''));
-                        $output->writeln($missing . ': ' . 'PLACEHOLDER' . ' saved.');
-                    }
+                $this->appRepository->save($app);
 
-                    $this->appRepository->save($app);
-                    $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
-                    $toNotify[] = $app;
-                } else {
-                    $this->appRepository->save(App::create($missing, 'removed', '', ''));
-                    $output->writeln($missing . ': ' . 'REMOVED_APP' . ' saved.');
-                }
+                $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
+                $toNotify[] = $app;
             }
         );
 

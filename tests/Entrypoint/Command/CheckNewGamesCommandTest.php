@@ -46,8 +46,18 @@ final class CheckNewGamesCommandTest extends TestCase
             ->willReturn([
                 'game_count' => 1,
                 'games' => [
-                    ['appid' => 20],
-                    ['appid' => 30],
+                    [
+                        'appid' => 20,
+                        'name' => 'game',
+                        'img_icon_url' => 'icon',
+                        'img_logo_url' => 'logo',
+                    ],
+                    [
+                        'appid' => 30,
+                        'name' => 'game2',
+                        'img_icon_url' => 'icon2',
+                        'img_logo_url' => 'logo2',
+                    ],
                 ]
             ]);
 
@@ -55,12 +65,7 @@ final class CheckNewGamesCommandTest extends TestCase
             ->method('all')
             ->willReturn([20]);
 
-        $app = App::create(30, 'game', 'name', 'img');
-
-        $this->client->expects($this->once())
-            ->method('appInfo')
-            ->with(30)
-            ->willReturn($app);
+        $app = App::create(30, 'game2', 'icon2', 'logo2');
 
         $this->appRepository->expects($this->once())
             ->method('save')
@@ -83,8 +88,18 @@ final class CheckNewGamesCommandTest extends TestCase
             ->willReturn([
                 'game_count' => 1,
                 'games' => [
-                    ['appid' => 20],
-                    ['appid' => 30],
+                    [
+                        'appid' => 20,
+                        'name' => 'game',
+                        'img_icon_url' => 'icon',
+                        'img_logo_url' => 'logo',
+                    ],
+                    [
+                        'appid' => 30,
+                        'name' => 'game2',
+                        'img_icon_url' => 'icon2',
+                        'img_logo_url' => 'logo2',
+                    ],
                 ]
             ]);
 
@@ -92,12 +107,7 @@ final class CheckNewGamesCommandTest extends TestCase
             ->method('all')
             ->willReturn([20]);
 
-        $app = App::create(30, 'game', 'name', 'img');
-
-        $this->client->expects($this->once())
-            ->method('appInfo')
-            ->with(30)
-            ->willReturn($app);
+        $app = App::create(30, 'game2', 'icon2', 'logo2');
 
         $this->appRepository->expects($this->once())
             ->method('save')
@@ -118,9 +128,24 @@ final class CheckNewGamesCommandTest extends TestCase
             ->willReturn([
                 'game_count' => 1,
                 'games' => [
-                    ['appid' => 20],
-                    ['appid' => 30],
-                    ['appid' => 40],
+                    [
+                        'appid' => 20,
+                        'name' => 'game',
+                        'img_icon_url' => 'icon',
+                        'img_logo_url' => 'logo',
+                    ],
+                    [
+                        'appid' => 30,
+                        'name' => 'game2',
+                        'img_icon_url' => 'icon2',
+                        'img_logo_url' => 'logo2',
+                    ],
+                    [
+                        'appid' => 40,
+                        'name' => 'game3',
+                        'img_icon_url' => 'icon3',
+                        'img_logo_url' => 'logo3',
+                    ],
                 ]
             ]);
 
@@ -128,13 +153,8 @@ final class CheckNewGamesCommandTest extends TestCase
             ->method('all')
             ->willReturn([20]);
 
-        $app = App::create(30, 'game', 'name', 'img');
-        $app2 = App::create(40, 'game2', 'name2', 'img2');
-
-        $this->client->expects($this->exactly(2))
-            ->method('appInfo')
-            ->withConsecutive([30], [40])
-            ->willReturnOnConsecutiveCalls($app, $app2);
+        $app = App::create(30, 'game2', 'icon2', 'logo2');
+        $app2 = App::create(40, 'game3', 'icon3', 'logo3');
 
         $this->appRepository->expects($this->exactly(2))
             ->method('save')
@@ -192,50 +212,5 @@ final class CheckNewGamesCommandTest extends TestCase
         $result = $commandTester->execute(['-t' => 'false']);
 
         $this->assertEquals(1, $result);
-    }
-
-    /** @test */
-    public function given_missing_games_with_changed_appid_then_save_placeholders(): void
-    {
-        $this->client->expects($this->once())
-            ->method('ownedGames')
-            ->with($this->userId)
-            ->willReturn([
-                'game_count' => 1,
-                'games' => [
-                    ['appid' => 20],
-                    ['appid' => 30],
-                    ['appid' => 40],
-                ]
-            ]);
-
-        $this->appRepository->expects($this->once())
-            ->method('all')
-            ->willReturn([]);
-
-        $app = App::create(21, 'game', 'name', 'img');
-        $app2 = App::create(31, 'game2', 'name2', 'img2');
-        $app3 = App::create(41, 'game3', 'name3', 'img3');
-
-        $this->client->expects($this->exactly(3))
-            ->method('appInfo')
-            ->withConsecutive([20], [30], [40])
-            ->willReturnOnConsecutiveCalls($app, $app2, $app3);
-
-        $this->appRepository->expects($this->exactly(6))
-            ->method('save')
-            ->withConsecutive(
-                [App::create(20, 'placeholder', '', '')],
-                [$app],
-                [App::create(30, 'placeholder', '', '')],
-                [$app2],
-                [App::create(40, 'placeholder', '', '')],
-                [$app3],
-            );
-
-        $commandTester = new CommandTester($this->command);
-        $result = $commandTester->execute(['-t' => 'false']);
-
-        $this->assertEquals(0, $result);
     }
 }
