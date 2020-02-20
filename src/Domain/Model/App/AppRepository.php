@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Domain\App;
-
-use DemigrantSoft\Domain\App\Model\App;
+namespace DemigrantSoft\Domain\Model\App;
 
 interface AppRepository
 {
     public function app(int $appId): ?App;
-    public function all(array $appIds): array;
+    /** @return int[] */
+    public function all(): array;
     public function save(App $app): void;
 }

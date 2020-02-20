@@ -2,7 +2,7 @@
 
 namespace DemigrantSoft\Infrastructure\Persistence\Repository;
 
-use DemigrantSoft\Domain\Persistence\Repository\Migration;
+use DemigrantSoft\Domain\Service\Persistence\Migration;
 use Doctrine\DBAL\Connection;
 
 final class DbalMigration implements Migration

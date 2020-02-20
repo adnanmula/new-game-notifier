@@ -2,11 +2,13 @@
 
 namespace DemigrantSoft\Tests\Entrypoint\Command;
 
-use DemigrantSoft\Domain\App\AppRepository;
-use DemigrantSoft\Domain\App\Model\App;
-use DemigrantSoft\Domain\Communication\CommunicationClient;
+use DemigrantSoft\Domain\Model\App\App;
+use DemigrantSoft\Domain\Model\App\AppRepository;
+use DemigrantSoft\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use DemigrantSoft\Domain\Service\Communication\CommunicationClient;
 use DemigrantSoft\Entrypoint\Command\CheckNewGamesCommand;
 use DemigrantSoft\Infrastructure\Steam\SteamClient;
+use DemigrantSoft\Tests\Mock\Domain\Model\LibraryMockProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -40,36 +42,26 @@ final class CheckNewGamesCommandTest extends TestCase
     {
         $this->communicationClient->expects($this->never())->method('say');
 
+        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
+        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
+
+        $provider = new LibraryMockProvider();
+        $provider->resetApps();
+        $provider->addApps($app1, $app2);
+        $library = $provider->build();
+
         $this->client->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
-            ->willReturn([
-                'game_count' => 1,
-                'games' => [
-                    [
-                        'appid' => 20,
-                        'name' => 'game',
-                        'img_icon_url' => 'icon',
-                        'img_logo_url' => 'logo',
-                    ],
-                    [
-                        'appid' => 30,
-                        'name' => 'game2',
-                        'img_icon_url' => 'icon2',
-                        'img_logo_url' => 'logo2',
-                    ],
-                ]
-            ]);
+            ->willReturn($library);
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([20]);
-
-        $app = App::create(30, 'game2', 'icon2', 'logo2');
+            ->willReturn([$app2->appid()]);
 
         $this->appRepository->expects($this->once())
             ->method('save')
-            ->with($app);
+            ->with($app1);
 
         $commandTester = new CommandTester($this->command);
         $result = $commandTester->execute(['-t' => 'false']);
@@ -82,36 +74,26 @@ final class CheckNewGamesCommandTest extends TestCase
     {
         $this->communicationClient->expects($this->exactly(2))->method('say');
 
+        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
+        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
+
+        $provider = new LibraryMockProvider();
+        $provider->resetApps();
+        $provider->addApps($app1, $app2);
+        $library = $provider->build();
+
         $this->client->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
-            ->willReturn([
-                'game_count' => 1,
-                'games' => [
-                    [
-                        'appid' => 20,
-                        'name' => 'game',
-                        'img_icon_url' => 'icon',
-                        'img_logo_url' => 'logo',
-                    ],
-                    [
-                        'appid' => 30,
-                        'name' => 'game2',
-                        'img_icon_url' => 'icon2',
-                        'img_logo_url' => 'logo2',
-                    ],
-                ]
-            ]);
+            ->willReturn($library);
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([20]);
-
-        $app = App::create(30, 'game2', 'icon2', 'logo2');
+            ->willReturn([$library->apps()[0]->appid()]);
 
         $this->appRepository->expects($this->once())
             ->method('save')
-            ->with($app);
+            ->with($app2);
 
         $commandTester = new CommandTester($this->command);
         $result = $commandTester->execute([]);
@@ -122,39 +104,26 @@ final class CheckNewGamesCommandTest extends TestCase
     /** @test */
     public function given_missing_games_then_sync_them(): void
     {
+        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
+        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
+        $app3 = App::create(30, 'game3', 'icon3', 'logo3');
+
+        $provider = new LibraryMockProvider();
+        $provider->resetApps();
+        $provider->addApps($app1, $app2, $app3);
+        $library = $provider->build();
+
         $this->client->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
-            ->willReturn([
-                'game_count' => 1,
-                'games' => [
-                    [
-                        'appid' => 20,
-                        'name' => 'game',
-                        'img_icon_url' => 'icon',
-                        'img_logo_url' => 'logo',
-                    ],
-                    [
-                        'appid' => 30,
-                        'name' => 'game2',
-                        'img_icon_url' => 'icon2',
-                        'img_logo_url' => 'logo2',
-                    ],
-                    [
-                        'appid' => 40,
-                        'name' => 'game3',
-                        'img_icon_url' => 'icon3',
-                        'img_logo_url' => 'logo3',
-                    ],
-                ]
-            ]);
+            ->willReturn($library);
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([20]);
+            ->willReturn([$app1->appid()]);
 
-        $app = App::create(30, 'game2', 'icon2', 'logo2');
-        $app2 = App::create(40, 'game3', 'icon3', 'logo3');
+        $app = App::create(20, 'game2', 'icon2', 'logo2');
+        $app2 = App::create(30, 'game3', 'icon3', 'logo3');
 
         $this->appRepository->expects($this->exactly(2))
             ->method('save')
@@ -169,21 +138,27 @@ final class CheckNewGamesCommandTest extends TestCase
     /** @test */
     public function given_no_missing_games_then_do_nothing(): void
     {
+        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
+        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
+        $app3 = App::create(30, 'game3', 'icon3', 'logo3');
+
+        $provider = new LibraryMockProvider();
+        $provider->resetApps();
+        $provider->addApps($app1, $app2, $app3);
+        $library = $provider->build();
+
         $this->client->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
-            ->willReturn([
-                'game_count' => 1,
-                'games' => [
-                    ['appid' => 20],
-                    ['appid' => 30],
-                    ['appid' => 40],
-                ]
-            ]);
+            ->willReturn($library);
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([20, 30, 40]);
+            ->willReturn([
+                $app1->appid(),
+                $app2->appid(),
+                $app3->appid(),
+            ]);
 
         $this->client->expects($this->never())->method('appInfo');
         $this->appRepository->expects($this->never())->method('save');
@@ -198,11 +173,12 @@ final class CheckNewGamesCommandTest extends TestCase
     public function given_bad_steam_response_then_log(): void
     {
         $this->communicationClient->expects($this->once())->method('log')->with('Fallo en GetOwnedGames');
+        $this->expectException(FailedToLoadLibraryException::class);
 
         $this->client->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
-            ->willReturn([]);
+            ->willReturn(null);
 
         $this->appRepository->expects($this->never())->method('all');
         $this->client->expects($this->never())->method('appInfo');

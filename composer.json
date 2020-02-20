@@ -19,6 +19,7 @@
         "symfony/yaml": "*"
     },
     "require-dev": {
+        "phpstan/phpstan": "^0.12.11",
         "phpunit/phpunit": "^8.5"
     },
     "config": {

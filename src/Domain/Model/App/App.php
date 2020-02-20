@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Domain\App\Model;
+namespace DemigrantSoft\Domain\Model\App;
 
 final class App
 {
@@ -17,7 +17,7 @@ final class App
         $this->header = $header;
     }
 
-    public static function create(int $appid, string $name, string $icon, string $header)
+    public static function create(int $appid, string $name, string $icon, string $header): self
     {
         return new self($appid, $name, $icon, $header);
     }

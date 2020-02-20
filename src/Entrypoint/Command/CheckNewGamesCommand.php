@@ -2,9 +2,10 @@
 
 namespace DemigrantSoft\Entrypoint\Command;
 
-use DemigrantSoft\Domain\App\AppRepository;
-use DemigrantSoft\Domain\App\Model\App;
-use DemigrantSoft\Domain\Communication\CommunicationClient;
+use DemigrantSoft\Domain\Model\App\App;
+use DemigrantSoft\Domain\Model\App\AppRepository;
+use DemigrantSoft\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use DemigrantSoft\Domain\Service\Communication\CommunicationClient;
 use DemigrantSoft\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,56 +43,51 @@ final class CheckNewGamesCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $ownedGames = $this->client->ownedGames($this->userId);
+        $library = $this->client->ownedGames($this->userId);
 
-        if (false === isset($ownedGames['games'])) {
+        if (null === $library) {
             $this->communicationClient->log('Fallo en GetOwnedGames');
-            return 1;
-        }
-
-        $mappedOwnedApps = [];
-        foreach ($ownedGames['games'] as $game) {
-            $mappedOwnedApps[$game['appid']] = $game;
+            throw new FailedToLoadLibraryException();
         }
 
         $missingApps = \array_diff(
-            \array_keys($mappedOwnedApps),
-            $this->appRepository->all(\array_map(fn(array $game) => $game['appid'], $ownedGames['games']))
+            $library->appids(),
+            $this->appRepository->all()
         );
 
-        $toNotify = [];
-        \array_walk(
-            $missingApps,
-            function (int $missing) use ($mappedOwnedApps, &$toNotify, $output) {
-                $app = App::create(
-                    $mappedOwnedApps[$missing]['appid'],
-                    $mappedOwnedApps[$missing]['name'],
-                    $mappedOwnedApps[$missing]['img_icon_url'],
-                    $mappedOwnedApps[$missing]['img_logo_url']
-                );
+        $toNotify = \array_map(
+            function (int $missing) use ($library, $output) {
+                $app = $library->app($missing);
+
+                if (null === $app) {
+                    throw new FailedToLoadLibraryException();
+                }
 
                 $this->appRepository->save($app);
 
                 $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
-                $toNotify[] = $app;
-            }
+                return $app;
+            },
+            $missingApps
         );
 
-        if ($this->notificationsEnabled($input) && count($toNotify) > 0) {
-            $this->notifyNewGames($toNotify);
+        if ($this->notificationsEnabled($input) && \count($toNotify) > 0) {
+            $this->notifyNewGames(...$toNotify);
         }
 
         return 0;
     }
 
-    private function notifyNewGames(array $toNotify): void
+    private function notifyNewGames(App ...$toNotify): void
     {
-        $this->communicationClient->say('Nuevos juegos!');
+        $this->communicationClient->say(\count($toNotify) . ' nuevos juegos!');
 
-        /** @var App $app */
-        foreach ($toNotify as $app) {
-            $this->communicationClient->say('[' . $app->name() . ']' . '(' . $app->url() . ')');
-        }
+        \array_walk(
+            $toNotify,
+            function (App $app): void {
+                $this->communicationClient->say('[' . $app->name() . '](' . $app->url() . ')');
+            }
+        );
     }
 
     private function notificationsEnabled(InputInterface $input): bool

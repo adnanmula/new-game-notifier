@@ -2,7 +2,8 @@
 
 namespace DemigrantSoft\Infrastructure\Steam;
 
-use DemigrantSoft\Domain\App\Model\App;
+use DemigrantSoft\Domain\Model\App\App;
+use DemigrantSoft\Domain\Model\Library\Library;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
@@ -22,7 +23,7 @@ class SteamClient extends Client
         parent::__construct([]);
     }
 
-    public function ownedGames(string $userId): array
+    public function ownedGames(string $userId): ?Library
     {
         $response = $this->get(self::URL_API . self::ENDPOINT_OWNED_GAMES, [
                 RequestOptions::QUERY => [
@@ -34,7 +35,31 @@ class SteamClient extends Client
             ]
         );
 
-        return \json_decode($response->getBody()->getContents(), true)['response'];
+        $rawResponse = \json_decode($response->getBody()->getContents(), true);
+
+        if (false === \array_key_exists('response', $rawResponse)) {
+            return null;
+        }
+
+        return $this->map($rawResponse['response']);
+    }
+
+    private function map(array $result): Library
+    {
+        return Library::create(
+            $result['game_count'],
+            ...\array_map(fn (array $game) => $this->mapApp($game), $result['games'])
+        );
+    }
+
+    private function mapApp(array $result): App
+    {
+        return App::create(
+            $result['appid'],
+            $result['name'],
+            $result['img_icon_url'],
+            $result['img_logo_url']
+        );
     }
 
     public function appInfo(int $appid): ?App

@@ -2,8 +2,8 @@
 
 namespace DemigrantSoft\Infrastructure\Persistence\Repository\App;
 
-use DemigrantSoft\Domain\App\AppRepository;
-use DemigrantSoft\Domain\App\Model\App;
+use DemigrantSoft\Domain\Model\App\App;
+use DemigrantSoft\Domain\Model\App\AppRepository;
 use DemigrantSoft\Infrastructure\Persistence\Repository\DbalRepository;
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
@@ -27,17 +27,13 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         return $this->map($result);
     }
 
-    public function all(array $appIds): array
+    public function all(): array
     {
         $ids = $this->connection->createQueryBuilder()
             ->select('a.app_id')
             ->from(self::TABLE, 'a')
             ->execute()
             ->fetchAll();
-
-        if (false === $ids) {
-            return [];
-        }
 
         return \array_map(fn($app) => $app['app_id'], $ids);
     }
@@ -68,7 +64,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->execute();
     }
 
-    private function map($result)
+    private function map(array $result): App
     {
         return App::create(
             $result['app_id'],

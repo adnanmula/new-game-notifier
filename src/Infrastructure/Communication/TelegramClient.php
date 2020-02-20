@@ -2,7 +2,7 @@
 
 namespace DemigrantSoft\Infrastructure\Communication;
 
-use DemigrantSoft\Domain\Communication\CommunicationClient;
+use DemigrantSoft\Domain\Service\Communication\CommunicationClient;
 
 final class TelegramClient implements CommunicationClient
 {

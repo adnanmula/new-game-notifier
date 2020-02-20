@@ -38,6 +38,10 @@ init: ## run migrations
 tests: ## execute project unit tests
 	docker-compose -f ${FILE} exec --user=${UID} php sh -c "phpunit --order=random"
 
+.PHONY: stan
+stan: ## pass phpstan
+	docker-compose -f ${FILE} exec --user=${UID} php sh -c "php -d memory_limit=256M vendor/bin/phpstan analyse -c phpstan.neon"
+
 .PHONY: ps
 ps: ## status from all containers
 	docker-compose -f ${FILE} ps

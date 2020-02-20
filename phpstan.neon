@@ -1,0 +1,13 @@
+parameters:
+    level: 8
+    checkMissingIterableValueType: true
+    paths:
+        -   src
+        -   tests
+    ignoreErrors:
+        -
+            message: '#Method DemigrantSoft\\Infrastructure\\[a-zA-Z\\]+::map[a-zA-Z]*\(\) has parameter \$result with no value type specified in iterable type array#'
+            path: %currentWorkingDirectory%/src/Infrastructure/*
+        -
+            message: '#Cannot call method (fetch\(\)|fetchAll\(\)) on Doctrine\\DBAL\\Driver\\Statement\|int#'
+            path: %currentWorkingDirectory%/src/Infrastructure/Persistence/Repository/*

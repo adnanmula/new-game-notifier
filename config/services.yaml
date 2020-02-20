@@ -1,5 +1,5 @@
 parameters:
-    db_url: postgresql://postgres:root@postgres/postgres
+    db_url: '%env(DATABASE_URL)%'
 
 services:
     _defaults:
