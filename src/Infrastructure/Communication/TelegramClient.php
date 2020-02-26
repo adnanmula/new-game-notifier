@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Infrastructure\Communication;
+namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Communication;
 
-use DemigrantSoft\Domain\Service\Communication\CommunicationClient;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
 
 final class TelegramClient implements CommunicationClient
 {

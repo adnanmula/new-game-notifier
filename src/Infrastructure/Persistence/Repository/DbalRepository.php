@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Infrastructure\Persistence\Repository;
+namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository;
 
 use Doctrine\DBAL\Connection;
 

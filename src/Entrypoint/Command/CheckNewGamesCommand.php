@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Entrypoint\Command;
+namespace DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command;
 
-use DemigrantSoft\Domain\Model\App\App;
-use DemigrantSoft\Domain\Model\App\AppRepository;
-use DemigrantSoft\Domain\Model\Library\Exception\FailedToLoadLibraryException;
-use DemigrantSoft\Domain\Service\Communication\CommunicationClient;
-use DemigrantSoft\Infrastructure\Steam\SteamClient;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
+use DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -38,7 +38,6 @@ final class CheckNewGamesCommand extends Command
         $this
             ->setDescription('Check new games added')
             ->addOption('notifications', 't', InputOption::VALUE_OPTIONAL, 'Telegram notifications', false);
-
     }
 
     public function execute(InputInterface $input, OutputInterface $output)

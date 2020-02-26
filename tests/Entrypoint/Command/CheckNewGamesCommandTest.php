@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Tests\Entrypoint\Command;
+namespace DemigrantSoft\Steam\NewGameNotifier\Tests\Entrypoint\Command;
 
-use DemigrantSoft\Domain\Model\App\App;
-use DemigrantSoft\Domain\Model\App\AppRepository;
-use DemigrantSoft\Domain\Model\Library\Exception\FailedToLoadLibraryException;
-use DemigrantSoft\Domain\Service\Communication\CommunicationClient;
-use DemigrantSoft\Entrypoint\Command\CheckNewGamesCommand;
-use DemigrantSoft\Infrastructure\Steam\SteamClient;
-use DemigrantSoft\Tests\Mock\Domain\Model\LibraryMockProvider;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
+use DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand;
+use DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use DemigrantSoft\Steam\NewGameNotifier\Tests\Mock\Domain\Model\LibraryMockProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

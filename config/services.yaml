@@ -7,12 +7,12 @@ services:
         autoconfigure: false
 
     client.http.steam:
-        class: DemigrantSoft\Infrastructure\Steam\SteamClient
+        class: DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient
         arguments:
             - "%env(STEAM_API_KEY)%"
 
     client.communication.telegram:
-        class: DemigrantSoft\Infrastructure\Communication\TelegramClient
+        class: DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Communication\TelegramClient
         arguments:
             - '%env(TELEGRAM_TOKEN)%'
             - '%env(TELEGRAM_GROUP_CHAT_ID)%'
@@ -26,34 +26,34 @@ services:
               driver: 'pdo_pgsql'
 
     migration.dbal:
-        class: DemigrantSoft\Infrastructure\Persistence\Repository\DbalMigration
+        class: DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalMigration
         arguments:
             - '@connection.dbal'
 
     repository.dbal:
-        class: DemigrantSoft\Infrastructure\Persistence\Repository\DbalRepository
+        class: DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository
         arguments:
             - '@connection.dbal'
 
     repository.app.dbal:
-        class: DemigrantSoft\Infrastructure\Persistence\Repository\App\AppDbalRepository
+        class: DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App\AppDbalRepository
         parent: repository.dbal
         autowire: false
         autoconfigure: false
 
     command.check:
-        class: DemigrantSoft\Entrypoint\Command\CheckNewGamesCommand
+        class: DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand
         arguments:
             - '@client.http.steam'
             - '@client.communication.telegram'
             - '@repository.app.dbal'
             - '%env(STEAM_ID_64)%'
         tags:
-            - { name: console.command, command: 'dms:game-check' }
+            - { name: console.command, command: 'demigrantsoft:new-game-notifier:check' }
 
     command.init:
-        class: DemigrantSoft\Entrypoint\Command\InitDbCommand
+        class: DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command\InitDbCommand
         arguments:
             - '@migration.dbal'
         tags:
-            - { name: console.command, command: 'dms:init-db' }
+            - { name: console.command, command: 'demigrantsoft:new-game-notifier:init' }

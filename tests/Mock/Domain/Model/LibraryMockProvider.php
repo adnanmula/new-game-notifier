@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Tests\Mock\Domain\Model;
+namespace DemigrantSoft\Steam\NewGameNotifier\Tests\Mock\Domain\Model;
 
-use DemigrantSoft\Domain\Model\App\App;
-use DemigrantSoft\Domain\Model\Library\Library;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Library;
 
 final class LibraryMockProvider
 {

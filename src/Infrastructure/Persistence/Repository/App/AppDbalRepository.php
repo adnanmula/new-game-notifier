@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Infrastructure\Persistence\Repository\App;
+namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App;
 
-use DemigrantSoft\Domain\Model\App\App;
-use DemigrantSoft\Domain\Model\App\AppRepository;
-use DemigrantSoft\Infrastructure\Persistence\Repository\DbalRepository;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository;
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
 {

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Domain\Model\Library\Exception;
+namespace DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 

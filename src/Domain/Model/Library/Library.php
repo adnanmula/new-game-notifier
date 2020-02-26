@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Domain\Model\Library;
+namespace DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library;
 
-use DemigrantSoft\Domain\Model\App\App;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
 
 final class Library
 {

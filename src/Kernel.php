@@ -1,6 +1,6 @@
 <?php
 
-namespace DemigrantSoft;
+namespace DemigrantSoft\Steam\NewGameNotifier;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;

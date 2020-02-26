@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Domain\Model\App;
+namespace DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App;
 
 interface AppRepository
 {

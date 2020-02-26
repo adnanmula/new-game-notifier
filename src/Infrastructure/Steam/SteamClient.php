@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Infrastructure\Steam;
+namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam;
 
-use DemigrantSoft\Domain\Model\App\App;
-use DemigrantSoft\Domain\Model\Library\Library;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Library;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 

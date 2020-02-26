@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "DemigrantSoft\\": "src/"
+            "DemigrantSoft\\Steam\\NewGameNotifier\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DemigrantSoft\\Tests\\": "tests/"
+            "DemigrantSoft\\Steam\\NewGameNotifier\\Tests\\": "tests/"
         }
     },
     "replace": {

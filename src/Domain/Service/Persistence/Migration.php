@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Domain\Service\Persistence;
+namespace DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Persistence;
 
 interface Migration
 {

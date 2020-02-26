@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Infrastructure\Persistence\Repository;
+namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository;
 
-use DemigrantSoft\Domain\Service\Persistence\Migration;
+use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Persistence\Migration;
 use Doctrine\DBAL\Connection;
 
 final class DbalMigration implements Migration
