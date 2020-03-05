@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Project rules" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+    <file>src/</file>
+
+    <exclude-pattern>src/Kernel.php</exclude-pattern>
+
+    <rule ref="PSR2" />
+
+    <rule ref="vendor/pccomponentes/coding-standard/src/ruleset.xml">
+        <exclude name="SlevomatCodingStandard.Functions.DisallowArrowFunction" />
+        <exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment" />
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="0"/>
+            <property name="newlinesCountAfterDeclare" value="2"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator">
+        <properties>
+            <property name="lineLengthLimit" value="60"/>
+        </properties>
+    </rule>
+    <arg name="colors" />
+</ruleset>

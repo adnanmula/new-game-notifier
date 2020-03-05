@@ -42,6 +42,10 @@ tests: ## execute project unit tests
 stan: ## pass phpstan
 	docker-compose -f ${FILE} exec --user=${UID} php sh -c "php -d memory_limit=256M vendor/bin/phpstan analyse -c phpstan.neon"
 
+.PHONY: cs
+cs: ## run phpcs checker
+	docker-compose -f ${FILE} exec --user=${UID} php sh -c "phpcs --standard=phpcs.xml.dist"
+
 .PHONY: ps
 ps: ## status from all containers
 	docker-compose -f ${FILE} ps

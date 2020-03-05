@@ -40,18 +40,19 @@ final class CheckNewGamesCommand extends Command
             ->addOption('notifications', 't', InputOption::VALUE_OPTIONAL, 'Telegram notifications', false);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $library = $this->client->ownedGames($this->userId);
 
         if (null === $library) {
             $this->communicationClient->log('Fallo en GetOwnedGames');
+
             throw new FailedToLoadLibraryException();
         }
 
         $missingApps = \array_diff(
             $library->appids(),
-            $this->appRepository->all()
+            $this->appRepository->all(),
         );
 
         $toNotify = \array_map(
@@ -65,9 +66,10 @@ final class CheckNewGamesCommand extends Command
                 $this->appRepository->save($app);
 
                 $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
+
                 return $app;
             },
-            $missingApps
+            $missingApps,
         );
 
         if ($this->notificationsEnabled($input) && \count($toNotify) > 0) {
@@ -85,14 +87,14 @@ final class CheckNewGamesCommand extends Command
             $toNotify,
             function (App $app): void {
                 $this->communicationClient->say('[' . $app->name() . '](' . $app->url() . ')');
-            }
+            },
         );
     }
 
     private function notificationsEnabled(InputInterface $input): bool
     {
         if (true === $input->hasParameterOption(['--notifications', '-t'])) {
-            return $input->getOption('notifications') === 'true' || $input->getOption('notifications') === null ;
+            return 'true' === $input->getOption('notifications') || null === $input->getOption('notifications');
         }
 
         return true;

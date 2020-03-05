@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class InitDbCommand extends Command
 {
-    /** @var Migration[] */
+    /** @var array<Migration> */
     private array $migrations;
 
     public function __construct(Migration ...$migration)
@@ -28,12 +28,12 @@ final class InitDbCommand extends Command
     {
         \array_walk(
             $this->migrations,
-            function (Migration $migration) use ($output) {
+            static function (Migration $migration) use ($output) {
                 $migration->down();
                 $migration->up();
 
-                $output->writeln(get_class($migration) . ' executed');
-            }
+                $output->writeln(\get_class($migration) . ' executed');
+            },
         );
 
         return 0;

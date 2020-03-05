@@ -35,7 +35,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ->execute()
             ->fetchAll();
 
-        return \array_map(fn($app) => $app['app_id'], $ids);
+        return \array_map(static fn($app) => $app['app_id'], $ids);
     }
 
     public function save(App $app): void
@@ -52,8 +52,8 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
                     icon = :icon,
                     header = :header
                     ',
-                self::TABLE
-            )
+                self::TABLE,
+            ),
         );
 
         $stmt->bindValue('app_id', $app->appid(), \PDO::PARAM_INT);
@@ -70,7 +70,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             $result['app_id'],
             $result['name'],
             $result['icon'],
-            $result['header']
+            $result['header'],
         );
     }
 }

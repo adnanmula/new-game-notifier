@@ -6,7 +6,7 @@ parameters:
         -   tests
     ignoreErrors:
         -
-            message: '#Method DemigrantSoft\\Infrastructure\\[a-zA-Z\\]+::map[a-zA-Z]*\(\) has parameter \$result with no value type specified in iterable type array#'
+            message: '#Method DemigrantSoft\\Steam\\NewGameNotifier\\Infrastructure\\[a-zA-Z\\]+::map[a-zA-Z]*\(\) has parameter \$result with no value type specified in iterable type array#'
             path: %currentWorkingDirectory%/src/Infrastructure/*
         -
             message: '#Cannot call method (fetch\(\)|fetchAll\(\)) on Doctrine\\DBAL\\Driver\\Statement\|int#'

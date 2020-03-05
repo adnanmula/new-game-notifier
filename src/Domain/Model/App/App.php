@@ -44,7 +44,7 @@ final class App
 
     public function iconUrl(): string
     {
-        return 'http://media.steampowered.com/steamcommunity/public/images/apps/'. $this->appid .'/'. $this->icon . '.jpg';
+        return 'http://media.steampowered.com/steamcommunity/public/images/apps/'.$this->appid.'/'.$this->icon . '.jpg';
     }
 
     public function header(): string
@@ -54,6 +54,6 @@ final class App
 
     public function headerUrl(): string
     {
-        return 'http://media.steampowered.com/steamcommunity/public/images/apps/'. $this->appid .'/'. $this->header . '.jpg';
+        return 'http://media.steampowered.com/steamcommunity/public/images/apps/'.$this->appid.'/'.$this->header.'.jpg';
     }
 }

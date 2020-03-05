@@ -25,14 +25,16 @@ class SteamClient extends Client
 
     public function ownedGames(string $userId): ?Library
     {
-        $response = $this->get(self::URL_API . self::ENDPOINT_OWNED_GAMES, [
+        $response = $this->get(
+            self::URL_API . self::ENDPOINT_OWNED_GAMES,
+            [
                 RequestOptions::QUERY => [
                     'key' => $this->apiKey,
                     'steamid' => $userId,
                     'format' => 'json',
-                    'include_appinfo' => true
+                    'include_appinfo' => true,
                 ],
-            ]
+            ],
         );
 
         $rawResponse = \json_decode($response->getBody()->getContents(), true);
@@ -44,31 +46,15 @@ class SteamClient extends Client
         return $this->map($rawResponse['response']);
     }
 
-    private function map(array $result): Library
-    {
-        return Library::create(
-            $result['game_count'],
-            ...\array_map(fn (array $game) => $this->mapApp($game), $result['games'])
-        );
-    }
-
-    private function mapApp(array $result): App
-    {
-        return App::create(
-            $result['appid'],
-            $result['name'],
-            $result['img_icon_url'],
-            $result['img_logo_url']
-        );
-    }
-
     public function appInfo(int $appid): ?App
     {
-        $response = $this->get(self::URL_STOREFRONT_API . self::ENDPOINT_GAME_INFO, [
+        $response = $this->get(
+            self::URL_STOREFRONT_API . self::ENDPOINT_GAME_INFO,
+            [
                 RequestOptions::QUERY => [
                     'appids' => $appid,
                 ],
-            ]
+            ],
         );
 
         $rawResponse = \json_decode($response->getBody()->getContents(), true)[(string) $appid];
@@ -82,6 +68,24 @@ class SteamClient extends Client
             $rawResponse['data']['type'],
             $rawResponse['data']['name'],
             $rawResponse['data']['header_image'],
+        );
+    }
+
+    private function map(array $result): Library
+    {
+        return Library::create(
+            $result['game_count'],
+            ...\array_map(fn (array $game) => $this->mapApp($game), $result['games']),
+        );
+    }
+
+    private function mapApp(array $result): App
+    {
+        return App::create(
+            $result['appid'],
+            $result['name'],
+            $result['img_icon_url'],
+            $result['img_logo_url'],
         );
     }
 }

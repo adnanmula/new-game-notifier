@@ -16,14 +16,14 @@ final class DbalMigration implements Migration
 
     public function up(): void
     {
-        $this->connection->exec('
-          CREATE TABLE app (
+        $this->connection->exec(
+            'CREATE TABLE app (
                 app_id int NOT NULL,
                 name character varying(128) NOT NULL,
                 icon character varying(128) NOT NULL,
                 header character varying(128) NOT NULL,
                 PRIMARY KEY(app_id)
-            )'
+            )',
         );
     }
 
