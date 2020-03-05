@@ -49,11 +49,11 @@ services:
             - '@repository.app.dbal'
             - '%env(STEAM_ID_64)%'
         tags:
-            - { name: console.command, command: 'demigrantsoft:new-game-notifier:check' }
+            - { name: console.command, command: 'new-game-notifier:check' }
 
     command.init:
         class: DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command\InitDbCommand
         arguments:
             - '@migration.dbal'
         tags:
-            - { name: console.command, command: 'demigrantsoft:new-game-notifier:init' }
+            - { name: console.command, command: 'new-game-notifier:init' }

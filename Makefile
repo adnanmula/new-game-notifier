@@ -24,7 +24,7 @@ down: ## down all containers
 
 .PHONY: check
 check: ## check games command, t=false to disable telegram notifications
-	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console demigrantsoft:new-game-notifier:check -t $(t)"
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check -t $(t)"
 
 .PHONY: install
 install: ## composer install for php container
@@ -32,7 +32,7 @@ install: ## composer install for php container
 
 .PHONY: init
 init: ## run migrations
-	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console demigrantsoft:new-game-notifier:init"
+	UID=${UID} GID=${GID} docker-compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:init"
 
 .PHONY: tests
 tests: ## execute project unit tests
