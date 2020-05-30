@@ -1,9 +1,12 @@
 #!/bin/bash
 
-T1="foo"
-T2="bar"
-if [ "$T1" = "$T2" ]; then
-    echo expression evaluated as true
+UNIT_TESTS_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "phpunit --order=random" 2>&1)
+UNIT_TESTS_STATUS=$?
+
+echo "$UNIT_TESTS_SCRIPT"
+
+if [ "$UNIT_TESTS_STATUS" = "0" ]; then
+    exit 0
 else
-    echo expression evaluated as false
+    exit 1
 fi
