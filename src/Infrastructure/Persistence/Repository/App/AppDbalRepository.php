@@ -35,7 +35,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ->execute()
             ->fetchAll();
 
-        return \array_map(static fn($app) => $app['app_id'], $ids);
+        return \array_map(static fn ($app) => $app['app_id'], $ids);
     }
 
     public function save(App $app): void

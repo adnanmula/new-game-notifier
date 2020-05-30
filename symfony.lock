@@ -26,9 +26,6 @@
     "myclabs/deep-copy": {
         "version": "1.9.3"
     },
-    "pccomponentes/coding-standard": {
-        "version": "v1.1.2"
-    },
     "phar-io/manifest": {
         "version": "1.0.3"
     },

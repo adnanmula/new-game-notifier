@@ -6,7 +6,7 @@ use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
 
 final class Library
 {
-    /** @var array<App>  */
+    /** @var array<App> */
     private array $apps;
     private int $appCount;
 
@@ -26,14 +26,16 @@ final class Library
         return $this->appCount;
     }
 
+    /** @return array<App> */
     public function apps(): array
     {
         return $this->apps;
     }
 
+    /** @return array<int> */
     public function appids(): array
     {
-        return \array_map(static fn(App $app) => $app->appid(), $this->apps);
+        return \array_map(static fn (App $app) => $app->appid(), $this->apps);
     }
 
     public function app(int $id): ?App
@@ -43,6 +45,6 @@ final class Library
             static fn (App $app) => $app->appid() === $id,
         );
 
-        return  1 === \count($app)? \current($app) : null;
+        return 1 === \count($app)? \current($app) : null;
     }
 }
