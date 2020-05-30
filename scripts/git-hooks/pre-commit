@@ -3,4 +3,16 @@ UNIT_TESTS_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "p
 UNIT_TESTS_STATUS=$?
 
 echo "$UNIT_TESTS_SCRIPT"
-exit $UNIT_TESTS_STATUS
+echo $UNIT_TESTS_STATUS
+
+STAN_TESTS_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "php -d memory_limit=256M vendor/bin/phpstan analyse -c phpstan.neon" 2>&1)
+STAN_TESTS_STATUS=$?
+
+echo "$STAN_TESTS_SCRIPT"
+echo $STAN_TESTS_STATUS
+
+STYLE_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "phpcs --standard=phpcs.xml.dist" 2>&1)
+STYLE_STATUS=$?
+
+echo "$STYLE_SCRIPT"
+echo $STYLE_STATUS
