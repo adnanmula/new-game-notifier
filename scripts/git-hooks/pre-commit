@@ -1,18 +1,9 @@
 #!/bin/bash
-UNIT_TESTS_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "phpunit --order=random" 2>&1)
-UNIT_TESTS_STATUS=$?
 
-echo "$UNIT_TESTS_SCRIPT"
-echo $UNIT_TESTS_STATUS
-
-STAN_TESTS_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "php -d memory_limit=256M vendor/bin/phpstan analyse -c phpstan.neon" 2>&1)
-STAN_TESTS_STATUS=$?
-
-echo "$STAN_TESTS_SCRIPT"
-echo $STAN_TESTS_STATUS
-
-STYLE_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "phpcs --standard=phpcs.xml.dist" 2>&1)
-STYLE_STATUS=$?
-
-echo "$STYLE_SCRIPT"
-echo $STYLE_STATUS
+T1="foo"
+T2="bar"
+if [ "$T1" = "$T2" ]; then
+    echo expression evaluated as true
+else
+    echo expression evaluated as false
+fi
