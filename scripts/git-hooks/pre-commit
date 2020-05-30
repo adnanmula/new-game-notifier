@@ -1,0 +1,6 @@
+#!/bin/bash
+UNIT_TESTS_SCRIPT=$(docker-compose run --user=${UID} --no-deps --rm php sh -c "phpunit --order=random" 2>&1)
+UNIT_TESTS_STATUS=$?
+
+echo "$UNIT_TESTS_SCRIPT"
+exit $UNIT_TESTS_STATUS

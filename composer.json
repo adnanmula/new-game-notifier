@@ -50,10 +50,14 @@
         "symfony/polyfill-php56": "*"
     },
     "scripts": {
-        "auto-scripts": [
-        ],
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
         "post-install-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "rm -rf .git/hooks",
+            "cp -r scripts/git-hooks .git/hooks"
         ],
         "post-update-cmd": [
             "@auto-scripts"
