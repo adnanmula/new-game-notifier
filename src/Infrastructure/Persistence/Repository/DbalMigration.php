@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository;
+namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Persistence\Migration;
+use AdnanMula\Steam\NewGameNotifier\Domain\Service\Persistence\Migration;
 use Doctrine\DBAL\Connection;
 
 final class DbalMigration implements Migration
@@ -16,7 +16,7 @@ final class DbalMigration implements Migration
 
     public function up(): void
     {
-        $this->connection->exec(
+        $this->connection->executeStatement(
             'CREATE TABLE app (
                 app_id int NOT NULL,
                 name character varying(128) NOT NULL,
@@ -29,6 +29,6 @@ final class DbalMigration implements Migration
 
     public function down(): void
     {
-        $this->connection->exec('DROP TABLE IF EXISTS app');
+        $this->connection->executeStatement('DROP TABLE IF EXISTS app');
     }
 }

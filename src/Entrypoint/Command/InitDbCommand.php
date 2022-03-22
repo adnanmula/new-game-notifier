@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command;
+namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Persistence\Migration;
+use AdnanMula\Steam\NewGameNotifier\Domain\Service\Persistence\Migration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

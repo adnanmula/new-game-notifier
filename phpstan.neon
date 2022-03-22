@@ -1,13 +1,12 @@
 parameters:
     level: 8
-    checkMissingIterableValueType: true
+    checkMissingIterableValueType: false
     paths:
         -   src
         -   tests
+    excludePaths:
+        - %currentWorkingDirectory%/src/Kernel.php
     ignoreErrors:
         -
-            message: '#Method DemigrantSoft\\Steam\\NewGameNotifier\\Infrastructure\\[a-zA-Z\\]+::map[a-zA-Z]*\(\) has parameter \$result with no value type specified in iterable type array#'
-            path: %currentWorkingDirectory%/src/Infrastructure/*
-        -
-            message: '#Cannot call method (fetch\(\)|fetchAll\(\)) on Doctrine\\DBAL\\Driver\\ResultStatement\|int#'
+            message: '#Cannot call method (fetchAssociative\(\)|fetchAllAssociative\(\)) on Doctrine\\DBAL\\[a-zA-Z\\]+#'
             path: %currentWorkingDirectory%/src/Infrastructure/Persistence/Repository/*

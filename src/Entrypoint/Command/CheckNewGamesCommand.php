@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command;
+namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
-use DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

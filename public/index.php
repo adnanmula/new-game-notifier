@@ -1,6 +1,6 @@
 <?php
 
-use DemigrantSoft\Steam\NewGameNotifier\Kernel;
+use AdnanMula\Steam\NewGameNotifier\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

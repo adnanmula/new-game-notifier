@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App;
+namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository;
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
 {
@@ -18,7 +18,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
             ->execute()
-            ->fetch();
+            ->fetchAssociative();
 
         if (false === $result) {
             return null;
@@ -27,13 +27,14 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         return $this->map($result);
     }
 
+    /** @return array<int> */
     public function all(): array
     {
         $ids = $this->connection->createQueryBuilder()
             ->select('a.app_id')
             ->from(self::TABLE, 'a')
             ->execute()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
         return \array_map(static fn ($app) => $app['app_id'], $ids);
     }
@@ -51,7 +52,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
                     name = :name,
                     icon = :icon,
                     header = :header
-                    ',
+                ',
                 self::TABLE,
             ),
         );
@@ -66,11 +67,6 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
 
     private function map(array $result): App
     {
-        return App::create(
-            $result['app_id'],
-            $result['name'],
-            $result['icon'],
-            $result['header'],
-        );
+        return App::create($result['app_id'], $result['name'], $result['icon'], $result['header']);
     }
 }

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Tests\Mock\Domain\Model;
+namespace AdnanMula\Steam\NewGameNotifier\Tests\Mock\Domain\Model;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Library;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
 
-final class LibraryMockProvider
+final class LibraryObjectMother
 {
     private int $appCount;
-    /** @var App[]  */
+    /** @var array<App>  */
     private array $apps;
 
     public function __construct()

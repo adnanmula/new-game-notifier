@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Tests\Entrypoint\Command;
+namespace AdnanMula\Steam\NewGameNotifier\Tests\Entrypoint\Command;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
-use DemigrantSoft\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand;
-use DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
-use DemigrantSoft\Steam\NewGameNotifier\Tests\Mock\Domain\Model\LibraryMockProvider;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
+use AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use AdnanMula\Steam\NewGameNotifier\Tests\Mock\Domain\Model\LibraryObjectMother;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -45,7 +45,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $app1 = App::create(10, 'game1', 'icon1', 'logo1');
         $app2 = App::create(20, 'game2', 'icon2', 'logo2');
 
-        $provider = new LibraryMockProvider();
+        $provider = new LibraryObjectMother();
         $provider->resetApps();
         $provider->addApps($app1, $app2);
         $library = $provider->build();
@@ -77,7 +77,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $app1 = App::create(10, 'game1', 'icon1', 'logo1');
         $app2 = App::create(20, 'game2', 'icon2', 'logo2');
 
-        $provider = new LibraryMockProvider();
+        $provider = new LibraryObjectMother();
         $provider->resetApps();
         $provider->addApps($app1, $app2);
         $library = $provider->build();
@@ -108,7 +108,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $app2 = App::create(20, 'game2', 'icon2', 'logo2');
         $app3 = App::create(30, 'game3', 'icon3', 'logo3');
 
-        $provider = new LibraryMockProvider();
+        $provider = new LibraryObjectMother();
         $provider->resetApps();
         $provider->addApps($app1, $app2, $app3);
         $library = $provider->build();
@@ -142,7 +142,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $app2 = App::create(20, 'game2', 'icon2', 'logo2');
         $app3 = App::create(30, 'game3', 'icon3', 'logo3');
 
-        $provider = new LibraryMockProvider();
+        $provider = new LibraryObjectMother();
         $provider->resetApps();
         $provider->addApps($app1, $app2, $app3);
         $library = $provider->build();

@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Infrastructure\Steam;
+namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library\Library;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
+use AdnanMula\Steam\NewGameNotifier\Shared\Json;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
@@ -37,7 +38,7 @@ class SteamClient extends Client
             ],
         );
 
-        $rawResponse = \json_decode($response->getBody()->getContents(), true);
+        $rawResponse = Json::decode($response->getBody()->getContents());
 
         if (false === \array_key_exists('response', $rawResponse)) {
             return null;
@@ -57,7 +58,7 @@ class SteamClient extends Client
             ],
         );
 
-        $rawResponse = \json_decode($response->getBody()->getContents(), true)[(string) $appid];
+        $rawResponse = Json::decode($response->getBody()->getContents())[(string) $appid];
 
         if (false === $rawResponse['success']) {
             return null;
@@ -81,11 +82,6 @@ class SteamClient extends Client
 
     private function mapApp(array $result): App
     {
-        return App::create(
-            $result['appid'],
-            $result['name'],
-            $result['img_icon_url'],
-            $result['img_logo_url'],
-        );
+        return App::create($result['appid'], $result['name'], $result['img_icon_url'], $result['img_logo_url']);
     }
 }

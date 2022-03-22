@@ -1,43 +1,47 @@
 {
-    "name": "new-game-notifier",
+    "name": "adnanmula/new-game-notifier",
     "type": "project",
     "license": "MIT",
     "description": "new-game-notifier",
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "demigrantsoft/telegram-send-message": "^0.0.1",
-        "doctrine/dbal": "^2.10",
+        "adnanmula/telegram-send-message": "^0.0.5",
+        "doctrine/dbal": "^3.3",
         "guzzlehttp/guzzle": "^6.5",
-        "symfony/console": "*",
-        "symfony/dotenv": "*",
-        "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "*",
-        "symfony/yaml": "*"
+        "symfony/console": "^6.0",
+        "symfony/dotenv": "^6.0",
+        "symfony/flex": "^2.1",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/yaml": "^6.0"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.11",
-        "phpunit/phpunit": "^8.5",
-        "slevomat/coding-standard": "^6.1",
-        "squizlabs/php_codesniffer": "^3.5"
+        "phpstan/phpstan": "^1.4",
+        "phpunit/phpunit": "^9",
+        "adnanmula/coding-standard": "^0.0.5",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "autoload": {
         "psr-4": {
-            "DemigrantSoft\\Steam\\NewGameNotifier\\": "src/"
+            "AdnanMula\\Steam\\NewGameNotifier\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DemigrantSoft\\Steam\\NewGameNotifier\\Tests\\": "tests/"
+            "AdnanMula\\Steam\\NewGameNotifier\\Tests\\": "tests/"
         }
     },
     "replace": {
@@ -69,7 +73,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.0.*"
+            "require": "6.0.*"
         }
     }
 }

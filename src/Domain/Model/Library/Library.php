@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace DemigrantSoft\Steam\NewGameNotifier\Domain\Model\Library;
+namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\Library;
 
-use DemigrantSoft\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 
 final class Library
 {
@@ -40,11 +40,11 @@ final class Library
 
     public function app(int $id): ?App
     {
-        $app = \array_filter(
+        $apps = \array_values(\array_filter(
             $this->apps,
             static fn (App $app) => $app->appid() === $id,
-        );
+        ));
 
-        return 1 === \count($app)? \current($app) : null;
+        return $apps[0] ?? null;
     }
 }
