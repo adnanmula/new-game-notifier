@@ -11,7 +11,7 @@
         "ext-pdo": "*",
         "adnanmula/telegram-send-message": "^0.0.5",
         "doctrine/dbal": "^3.3",
-        "guzzlehttp/guzzle": "^6.5",
+        "guzzlehttp/guzzle": "^6.5.8",
         "symfony/console": "^6.0",
         "symfony/dotenv": "^6.0",
         "symfony/flex": "^2.1",

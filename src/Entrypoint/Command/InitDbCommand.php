@@ -24,11 +24,11 @@ final class InitDbCommand extends Command
         $this->setDescription('Init database');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         \array_walk(
             $this->migrations,
-            static function (Migration $migration) use ($output) {
+            static function (Migration $migration) use ($output): void {
                 $migration->down();
                 $migration->up();
 
@@ -36,6 +36,6 @@ final class InitDbCommand extends Command
             },
         );
 
-        return 0;
+        return self::SUCCESS;
     }
 }

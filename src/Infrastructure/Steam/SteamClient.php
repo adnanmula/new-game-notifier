@@ -82,6 +82,11 @@ class SteamClient extends Client
 
     private function mapApp(array $result): App
     {
-        return App::create($result['appid'], $result['name'], $result['img_icon_url'], $result['img_logo_url']);
+        return App::create(
+            $result['appid'],
+            $result['name'],
+            $result['img_icon_url'],
+            $result['img_logo_url'],
+        );
     }
 }

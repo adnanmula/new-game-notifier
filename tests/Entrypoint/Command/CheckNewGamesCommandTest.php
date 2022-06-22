@@ -33,7 +33,7 @@ final class CheckNewGamesCommandTest extends TestCase
             $this->client,
             $this->communicationClient,
             $this->appRepository,
-            $this->userId
+            $this->userId,
         );
     }
 

@@ -8,7 +8,7 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
 final class LibraryObjectMother
 {
     private int $appCount;
-    /** @var array<App>  */
+    /** @var array<App> */
     private array $apps;
 
     public function __construct()
@@ -30,7 +30,9 @@ final class LibraryObjectMother
 
     public function addApps(App ...$apps): self
     {
-        \array_walk($apps, fn (App $app) => $this->apps[] = $app);
+        foreach ($apps as $app) {
+            $this->apps[] = $app;
+        }
 
         return $this;
     }

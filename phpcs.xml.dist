@@ -1,81 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="Project rules" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-    <file>src/</file>
-
+<ruleset name="Project rules">
+    <arg name="colors"/>
+    <file>src</file>
+    <file>tests</file>
     <exclude-pattern>src/Kernel.php</exclude-pattern>
+    <rule ref="vendor/adnanmula/coding-standard/src/ruleset.xml" />
 
-    <rule ref="PSR2" />
-
-    <rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
-        <exclude name="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
-        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming" />
-        <exclude name="SlevomatCodingStandard.Classes.MethodSpacing.IncorrectLinesCountBetweenMethods" />
-        <exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment" />
-        <exclude name="SlevomatCodingStandard.ControlStructures.AssignmentInCondition" />
-        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator" />
-        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison" />
-        <exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses" />
-        <exclude name="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator" />
-        <exclude name="SlevomatCodingStandard.Files.TypeNameMatchesFileName" />
-        <exclude name="SlevomatCodingStandard.Functions.DisallowArrowFunction" />
-        <exclude name="SlevomatCodingStandard.Functions.UnusedParameter" />
-        <exclude name="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
-        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameAfterKeyword" />
-        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation" />
-        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedExceptions" />
-        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions" />
-        <exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly" />
-        <exclude name="SlevomatCodingStandard.Namespaces.UseOnlyWhitelistedNamespaces" />
-        <exclude name="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators" />
-        <exclude name="SlevomatCodingStandard.TypeHints.LongTypeHints" />
-        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint" />
-        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint" />
-        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint" />
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
     </rule>
-
-    <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="lineLimit" value="180"/>
-        </properties>
-    </rule>
-
-    <rule ref="Generic.PHP.ForbiddenFunctions">
-        <properties>
-            <property name="forbiddenFunctions" type="array" value="array=>null,var_dump=>null,dump=>null,dd=>null" />
-        </properties>
-    </rule>
-
-    <rule ref="SlevomatCodingStandard.ControlStructures.RequireYodaComparison" />
-
-    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
-        <properties>
-            <property name="newlinesCountBetweenOpenTagAndDeclare" value="0"/>
-            <property name="newlinesCountAfterDeclare" value="2"/>
-            <property name="spacesCountAroundEqualsSign" value="0"/>
-        </properties>
-    </rule>
-
-    <rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
-        <properties>
-            <property name="linesCountBeforeFirstUse" value="0"/>
-        </properties>
-    </rule>
-
-    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments" >
-        <properties>
-            <property name="forbiddenCommentPatterns" type="array">
-                <element value="/Created by PhpStorm/"/>
-            </property>
-        </properties>
-    </rule>
-
-    <rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
-        <properties>
-            <property name="linesCountAfterOpeningBrace" value="0"/>
-            <property name="linesCountBeforeClosingBrace" value="0"/>
-        </properties>
-    </rule>
-
-    <arg name="colors" />
 </ruleset>
