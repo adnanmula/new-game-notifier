@@ -4,6 +4,9 @@ namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\App;
 
 final class App
 {
+    private const URL_APP = 'https://store.steampowered.com/app/';
+    private const URL_IMAGES = 'http://media.steampowered.com/steamcommunity/public/images/apps/';
+
     private int $appid;
     private string $name;
     private string $icon;
@@ -34,7 +37,7 @@ final class App
 
     public function url(): string
     {
-        return 'https://store.steampowered.com/app/' . $this->appid;
+        return self::URL_APP . $this->appid;
     }
 
     public function icon(): string
@@ -44,7 +47,7 @@ final class App
 
     public function iconUrl(): string
     {
-        return 'http://media.steampowered.com/steamcommunity/public/images/apps/'.$this->appid.'/'.$this->icon . '.jpg';
+        return self::URL_IMAGES . $this->appid . '/' . $this->icon . '.jpg';
     }
 
     public function header(): string
@@ -54,6 +57,6 @@ final class App
 
     public function headerUrl(): string
     {
-        return 'http://media.steampowered.com/steamcommunity/public/images/apps/'.$this->appid.'/'.$this->header.'.jpg';
+        return self::URL_IMAGES . $this->appid . '/' . $this->header . '.jpg';
     }
 }

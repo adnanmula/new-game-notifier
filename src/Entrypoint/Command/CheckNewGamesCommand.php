@@ -76,7 +76,7 @@ final class CheckNewGamesCommand extends Command
             $this->notifyNewGames(...$toNotify);
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     private function notifyNewGames(App ...$toNotify): void
