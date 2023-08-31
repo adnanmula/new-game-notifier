@@ -32,7 +32,7 @@ final class InitDbCommand extends Command
                 $migration->down();
                 $migration->up();
 
-                $output->writeln(\get_class($migration) . ' executed');
+                $output->writeln($migration::class . ' executed');
             },
         );
 

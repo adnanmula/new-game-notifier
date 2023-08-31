@@ -7,12 +7,8 @@ use Doctrine\DBAL\Connection;
 
 final class DbalMigration implements Migration
 {
-    protected Connection $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
+    public function __construct(protected Connection $connection)
+    {}
 
     public function up(): void
     {

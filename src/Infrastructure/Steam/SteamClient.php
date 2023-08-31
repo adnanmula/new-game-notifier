@@ -15,12 +15,8 @@ class SteamClient extends Client
     private const ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
     private const ENDPOINT_GAME_INFO = 'api/appdetails/';
 
-    private string $apiKey;
-
-    public function __construct(string $apiKey)
+    public function __construct(private string $apiKey)
     {
-        $this->apiKey = $apiKey;
-
         parent::__construct([]);
     }
 

@@ -14,29 +14,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class CheckNewGamesCommand extends Command
 {
-    private SteamClient $client;
-    private CommunicationClient $communicationClient;
-    private string $userId;
-    private AppRepository $appRepository;
-
     public function __construct(
-        SteamClient $client,
-        CommunicationClient $communicationClient,
-        AppRepository $appRepository,
-        string $userId
+        private SteamClient $client,
+        private CommunicationClient $communicationClient,
+        private AppRepository $appRepository,
+        private string $userId,
     ) {
-        $this->client = $client;
-        $this->communicationClient = $communicationClient;
-        $this->appRepository = $appRepository;
-        $this->userId = $userId;
-
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Check new games added')
+        $this->setDescription('Check new games added')
             ->addOption('notifications', 't', InputOption::VALUE_OPTIONAL, 'Telegram notifications', false);
     }
 

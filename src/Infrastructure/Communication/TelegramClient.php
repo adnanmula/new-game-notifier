@@ -8,15 +8,10 @@ use AdnanMula\Telegram\SendMessage\TelegramClient as Client;
 final class TelegramClient implements CommunicationClient
 {
     private Client $client;
-    private string $groupChatId;
-    private string $adminChatId;
 
-    public function __construct(string $token, string $groupChatId, string $adminChatId)
+    public function __construct(string $token, private string $groupChatId, private string $adminChatId)
     {
         $this->client = new Client($token);
-
-        $this->groupChatId = $groupChatId;
-        $this->adminChatId = $adminChatId;
     }
 
     public function say(string $msg): void

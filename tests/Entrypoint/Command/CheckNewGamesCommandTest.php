@@ -22,7 +22,7 @@ final class CheckNewGamesCommandTest extends TestCase
 
     private CheckNewGamesCommand $command;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         $this->client = $this->createMock(SteamClient::class);
         $this->communicationClient = $this->createMock(CommunicationClient::class);

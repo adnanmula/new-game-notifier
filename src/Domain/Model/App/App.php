@@ -7,18 +7,8 @@ final class App
     private const URL_APP = 'https://store.steampowered.com/app/';
     private const URL_IMAGES = 'http://media.steampowered.com/steamcommunity/public/images/apps/';
 
-    private int $appid;
-    private string $name;
-    private string $icon;
-    private string $header;
-
-    private function __construct(int $appid, string $name, string $icon, string $header)
-    {
-        $this->appid = $appid;
-        $this->name = $name;
-        $this->icon = $icon;
-        $this->header = $header;
-    }
+    private function __construct(private int $appid, private string $name, private string $icon, private string $header)
+    {}
 
     public static function create(int $appid, string $name, string $icon, string $header): self
     {

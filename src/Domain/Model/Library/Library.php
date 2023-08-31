@@ -6,13 +6,10 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 
 final class Library
 {
-    /** @var array<App> */
     private array $apps;
-    private int $appCount;
 
-    private function __construct(int $appCount, App ...$apps)
+    private function __construct(private int $appCount, App ...$apps)
     {
-        $this->appCount = $appCount;
         $this->apps = $apps;
     }
 
@@ -26,7 +23,6 @@ final class Library
         return $this->appCount;
     }
 
-    /** @return array<App> */
     public function apps(): array
     {
         return $this->apps;
