@@ -20,9 +20,10 @@
         "symfony/yaml": "^7.2"
     },
     "require-dev": {
+        "adnanmula/coding-standard": "^0.0.11",
+        "phpro/grumphp": "^2.10",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9",
-        "adnanmula/coding-standard": "^0.0.11",
         "squizlabs/php_codesniffer": "^3.7"
     },
     "config": {
@@ -31,8 +32,9 @@
         },
         "sort-packages": true,
         "allow-plugins": {
-            "symfony/flex": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpro/grumphp": true,
+            "symfony/flex": true
         }
     },
     "autoload": {
