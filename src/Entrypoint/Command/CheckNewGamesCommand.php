@@ -14,27 +14,33 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class CheckNewGamesCommand extends Command
 {
+    private const string NAME = 'new-game-notifier:check';
+
     public function __construct(
         private SteamClient $client,
         private CommunicationClient $communicationClient,
         private AppRepository $appRepository,
-        private string $userId,
+        private string $steamUserId,
     ) {
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this->setDescription('Check new games added')
+        $this->setName(self::NAME)
+            ->setDescription('Check new games added')
             ->addOption('notifications', 't', InputOption::VALUE_OPTIONAL, 'Telegram notifications', false);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $library = $this->client->ownedGames($this->userId);
+        $notificationsEnabled = $this->notificationsEnabled($input);
+        $library = $this->client->ownedGames($this->steamUserId);
 
         if (null === $library) {
-            $this->communicationClient->log('Fallo en GetOwnedGames');
+            if ($notificationsEnabled) {
+                $this->communicationClient->log('Fallo en GetOwnedGames');
+            }
 
             throw new FailedToLoadLibraryException();
         }
@@ -61,7 +67,7 @@ final class CheckNewGamesCommand extends Command
             $missingApps,
         );
 
-        if ($this->notificationsEnabled($input) && \count($toNotify) > 0) {
+        if ($notificationsEnabled && \count($toNotify) > 0) {
             $this->notifyNewGames(...$toNotify);
         }
 

@@ -9,9 +9,9 @@ final class TelegramClient implements CommunicationClient
 {
     private Client $client;
 
-    public function __construct(string $token, private string $groupChatId, private string $adminChatId)
+    public function __construct(string $telegramToken, private string $groupChatId, private string $adminChatId)
     {
-        $this->client = new Client($token);
+        $this->client = new Client($telegramToken);
     }
 
     public function say(string $msg): void

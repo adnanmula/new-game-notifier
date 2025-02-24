@@ -14,3 +14,10 @@ framework:
     #fragments: true
     php_errors:
         log: true
+
+    http_client:
+        scoped_clients:
+            steam_api.client:
+                base_uri: 'http://api.steampowered.com'
+            steam_storefront.client:
+                base_uri: 'https://store.steampowered.com'

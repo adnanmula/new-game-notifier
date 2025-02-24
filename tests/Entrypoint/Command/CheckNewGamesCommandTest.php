@@ -185,7 +185,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->appRepository->expects($this->never())->method('save');
 
         $commandTester = new CommandTester($this->command);
-        $result = $commandTester->execute(['-t' => 'false']);
+        $result = $commandTester->execute(['-t' => 'true']);
 
         $this->assertEquals(1, $result);
     }

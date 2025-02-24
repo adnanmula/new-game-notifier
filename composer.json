@@ -11,12 +11,12 @@
         "ext-pdo": "*",
         "adnanmula/telegram-send-message": "^0.0.5",
         "doctrine/dbal": "^3",
-        "guzzlehttp/guzzle": "^6.5.8",
         "robmorgan/phinx": "^0.16",
         "symfony/console": "^7.2",
         "symfony/dotenv": "^7.2",
         "symfony/flex": "^2.4",
         "symfony/framework-bundle": "^7.2",
+        "symfony/http-client": "7.2.*",
         "symfony/yaml": "^7.2"
     },
     "require-dev": {

@@ -5,36 +5,32 @@ namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
 use AdnanMula\Steam\NewGameNotifier\Shared\Json;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class SteamClient extends Client
+class SteamClient
 {
-    private const string URL_API = 'http://api.steampowered.com/';
-    private const string URL_STOREFRONT_API = 'https://store.steampowered.com/';
     private const string ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
     private const string ENDPOINT_GAME_INFO = 'api/appdetails/';
 
-    public function __construct(private string $apiKey)
-    {
-        parent::__construct([]);
-    }
+    public function __construct(
+        private string $apiKey,
+        private HttpClientInterface $steamApiClient,
+        private HttpClientInterface $steamStorefrontClient,
+    ) {}
 
     public function ownedGames(string $userId): ?Library
     {
-        $response = $this->get(
-            self::URL_API . self::ENDPOINT_OWNED_GAMES,
-            [
-                RequestOptions::QUERY => [
-                    'key' => $this->apiKey,
-                    'steamid' => $userId,
-                    'format' => 'json',
-                    'include_appinfo' => true,
-                ],
+        $response = $this->steamApiClient->request(Request::METHOD_GET, self::ENDPOINT_OWNED_GAMES, [
+            'query' => [
+                'key' => $this->apiKey,
+                'steamid' => $userId,
+                'format' => 'json',
+                'include_appinfo' => true,
             ],
-        );
+        ]);
 
-        $rawResponse = Json::decode($response->getBody()->getContents());
+        $rawResponse = Json::decode($response->getContent());
 
         if (false === \array_key_exists('response', $rawResponse)) {
             return null;
@@ -45,16 +41,13 @@ class SteamClient extends Client
 
     public function appInfo(int $appid): ?App
     {
-        $response = $this->get(
-            self::URL_STOREFRONT_API . self::ENDPOINT_GAME_INFO,
-            [
-                RequestOptions::QUERY => [
-                    'appids' => $appid,
-                ],
+        $response = $this->steamStorefrontClient->request(Request::METHOD_GET, self::ENDPOINT_GAME_INFO, [
+            'query' => [
+                'appids' => $appid,
             ],
-        );
+        ]);
 
-        $rawResponse = Json::decode($response->getBody()->getContents())[(string) $appid];
+        $rawResponse = Json::decode($response->getContent())[(string) $appid];
 
         if (false === $rawResponse['success']) {
             return null;

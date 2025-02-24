@@ -1,16 +1,20 @@
 parameters:
-    db_url: '%env(DATABASE_URL)%'
+    db_url: '%env(resolve:DATABASE_URL)%'
     db_url_default: '%env(resolve:DATABASE_URL_DEFAULT)%'
 
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-
-    client.http.steam:
-        class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient
-        arguments:
-            - "%env(STEAM_API_KEY)%"
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            string $steamUserId: '%env(STEAM_ID_64)%'
+            string $apiKey: '%env(STEAM_API_KEY)%'
+            string $telegramToken: '%env(TELEGRAM_TOKEN)%'
+            string $groupChatId: '%env(TELEGRAM_GROUP_CHAT_ID)%'
+            string $adminChatId: '%env(TELEGRAM_ADMIN_CHAT_ID)%'
+            Doctrine\DBAL\Connection $connection: '@repository.dbal.connection'
+            Doctrine\DBAL\Connection $defaultConnection: '@repository.dbal.connection_default'
 
     client.communication.telegram:
         class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Communication\TelegramClient
@@ -33,31 +37,21 @@ services:
             - url: '%db_url_default%'
               driver: 'pdo_pgsql'
 
-    repository.dbal:
-        class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository
-        arguments:
-            - '@repository.dbal.connection'
+    AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\:
+        resource: '../src/Domain/Service/Communication'
 
-    repository.app.dbal:
-        class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App\AppDbalRepository
-        parent: repository.dbal
-        autowire: false
-        autoconfigure: false
+    AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\:
+        resource: '../src/Infrastructure/Persistence/Repository'
 
-    command.check:
-        class: AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand
-        arguments:
-            - '@client.http.steam'
-            - '@client.communication.telegram'
-            - '@repository.app.dbal'
-            - '%env(STEAM_ID_64)%'
-        tags:
-            - { name: console.command, command: 'new-game-notifier:check' }
+    AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\:
+        resource: '../src/Infrastructure/Steam'
 
-    command.init:
-        class: AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\Environment\EnvironmentInitCommand
-        arguments:
-            - '@repository.dbal.connection_default'
-            - '@repository.dbal.connection'
-        tags:
-            - { name: console.command, command: 'environment:init' }
+    AdnanMula\Steam\NewGameNotifier\Infrastructure\Communication\:
+        resource: '../src/Infrastructure/Communication'
+
+    AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository:
+        alias: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App\AppDbalRepository
+
+    AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\:
+        resource: '../src/Entrypoint/Command'
+        tags: [ 'console.command' ]

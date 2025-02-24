@@ -12,16 +12,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class EnvironmentInitCommand extends Command
 {
+    private const string NAME = 'environment:init';
+
     public function __construct(
         private readonly Connection $defaultConnection,
         private readonly Connection $connection,
     ) {
-        parent::__construct(null);
+        parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this->setDescription('Initialize environment (creates db and executes migrations)');
+        $this->setName(self::NAME)
+            ->setDescription('Initialize environment (creates db and executes migrations)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
