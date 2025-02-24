@@ -12,7 +12,7 @@ services:
       - network_ngn
 
   postgres:
-    image: postgres:11.1-alpine
+    image: postgres:17-alpine
     container_name: ngn_postgres
     ports:
       - ${POSTGRES_PORT}:5432

@@ -16,8 +16,8 @@ final class LibraryObjectMother
         $this->appCount = 2;
 
         $this->addApps(
-            App::create(40, 'App40', 'icon-40', 'header-40'),
-            App::create(60, 'App60', 'icon-60', 'header-60'),
+            App::create(40, 'App40', 'icon-40'),
+            App::create(60, 'App60', 'icon-60'),
         );
     }
 

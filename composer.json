@@ -4,24 +4,25 @@
     "license": "MIT",
     "description": "new-game-notifier",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
         "adnanmula/telegram-send-message": "^0.0.5",
-        "doctrine/dbal": "^3.3",
+        "doctrine/dbal": "^3",
         "guzzlehttp/guzzle": "^6.5.8",
-        "symfony/console": "^6.3",
-        "symfony/dotenv": "^6.3",
-        "symfony/flex": "^2.1",
-        "symfony/framework-bundle": "^6.3",
-        "symfony/yaml": "^6.3"
+        "robmorgan/phinx": "^0.16",
+        "symfony/console": "^7.2",
+        "symfony/dotenv": "^7.2",
+        "symfony/flex": "^2.4",
+        "symfony/framework-bundle": "^7.2",
+        "symfony/yaml": "^7.2"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9",
-        "adnanmula/coding-standard": "^0.0.8",
+        "adnanmula/coding-standard": "^0.0.11",
         "squizlabs/php_codesniffer": "^3.7"
     },
     "config": {
@@ -73,7 +74,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.3.*"
+            "require": "7.2.*"
         }
     }
 }

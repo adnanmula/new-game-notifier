@@ -8,16 +8,16 @@ use AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRe
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
 {
-    private const TABLE = 'app';
+    private const string TABLE = 'app';
 
     public function app(int $appId): ?App
     {
         $result = $this->connection->createQueryBuilder()
-            ->select('a.app_id, a.name, a.icon, a.header')
+            ->select('a.app_id, a.name, a.icon')
             ->from(self::TABLE, 'a')
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative();
 
         if (false === $result) {
@@ -33,7 +33,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $ids = $this->connection->createQueryBuilder()
             ->select('a.app_id')
             ->from(self::TABLE, 'a')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
 
         return \array_map(static fn ($app) => $app['app_id'], $ids);
@@ -44,14 +44,12 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt = $this->connection->prepare(
             \sprintf(
                 '
-                    INSERT INTO %s
-                    (app_id, name, icon, header)
-                    VALUES (:app_id, :name, :icon, :header)
+                    INSERT INTO %s (app_id, name, icon)
+                    VALUES (:app_id, :name, :icon)
                     ON CONFLICT (app_id) DO UPDATE SET 
                     app_id = :app_id,
                     name = :name,
-                    icon = :icon,
-                    header = :header
+                    icon = :icon
                 ',
                 self::TABLE,
             ),
@@ -60,13 +58,12 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->bindValue('app_id', $app->appid(), \PDO::PARAM_INT);
         $stmt->bindValue('name', $app->name(), \PDO::PARAM_STR);
         $stmt->bindValue('icon', $app->icon(), \PDO::PARAM_STR);
-        $stmt->bindValue('header', $app->header(), \PDO::PARAM_STR);
 
-        $stmt->execute();
+        $stmt->executeStatement();
     }
 
     private function map(array $result): App
     {
-        return App::create($result['app_id'], $result['name'], $result['icon'], $result['header']);
+        return App::create($result['app_id'], $result['name'], $result['icon']);
     }
 }

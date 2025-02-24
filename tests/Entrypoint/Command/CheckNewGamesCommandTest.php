@@ -42,8 +42,8 @@ final class CheckNewGamesCommandTest extends TestCase
     {
         $this->communicationClient->expects($this->never())->method('say');
 
-        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
-        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
+        $app1 = App::create(10, 'game1', 'icon1');
+        $app2 = App::create(20, 'game2', 'icon2');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -74,8 +74,8 @@ final class CheckNewGamesCommandTest extends TestCase
     {
         $this->communicationClient->expects($this->exactly(2))->method('say');
 
-        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
-        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
+        $app1 = App::create(10, 'game1', 'icon1');
+        $app2 = App::create(20, 'game2', 'icon2');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -104,9 +104,9 @@ final class CheckNewGamesCommandTest extends TestCase
     /** @test */
     public function given_missing_games_then_sync_them(): void
     {
-        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
-        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
-        $app3 = App::create(30, 'game3', 'icon3', 'logo3');
+        $app1 = App::create(10, 'game1', 'icon1');
+        $app2 = App::create(20, 'game2', 'icon2');
+        $app3 = App::create(30, 'game3', 'icon3');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -122,8 +122,8 @@ final class CheckNewGamesCommandTest extends TestCase
             ->method('all')
             ->willReturn([$app1->appid()]);
 
-        $app = App::create(20, 'game2', 'icon2', 'logo2');
-        $app2 = App::create(30, 'game3', 'icon3', 'logo3');
+        $app = App::create(20, 'game2', 'icon2');
+        $app2 = App::create(30, 'game3', 'icon3');
 
         $this->appRepository->expects($this->exactly(2))
             ->method('save')
@@ -138,9 +138,9 @@ final class CheckNewGamesCommandTest extends TestCase
     /** @test */
     public function given_no_missing_games_then_do_nothing(): void
     {
-        $app1 = App::create(10, 'game1', 'icon1', 'logo1');
-        $app2 = App::create(20, 'game2', 'icon2', 'logo2');
-        $app3 = App::create(30, 'game3', 'icon3', 'logo3');
+        $app1 = App::create(10, 'game1', 'icon1');
+        $app2 = App::create(20, 'game2', 'icon2');
+        $app3 = App::create(30, 'game3', 'icon3');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();

@@ -10,10 +10,10 @@ use GuzzleHttp\RequestOptions;
 
 class SteamClient extends Client
 {
-    private const URL_API = 'http://api.steampowered.com/';
-    private const URL_STOREFRONT_API = 'https://store.steampowered.com/';
-    private const ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
-    private const ENDPOINT_GAME_INFO = 'api/appdetails/';
+    private const string URL_API = 'http://api.steampowered.com/';
+    private const string URL_STOREFRONT_API = 'https://store.steampowered.com/';
+    private const string ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
+    private const string ENDPOINT_GAME_INFO = 'api/appdetails/';
 
     public function __construct(private string $apiKey)
     {
@@ -64,7 +64,6 @@ class SteamClient extends Client
             $rawResponse['data']['steam_appid'],
             $rawResponse['data']['type'],
             $rawResponse['data']['name'],
-            $rawResponse['data']['header_image'],
         );
     }
 
@@ -82,7 +81,6 @@ class SteamClient extends Client
             $result['appid'],
             $result['name'],
             $result['img_icon_url'],
-            $result['img_logo_url'],
         );
     }
 }

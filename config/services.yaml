@@ -1,5 +1,6 @@
 parameters:
     db_url: '%env(DATABASE_URL)%'
+    db_url_default: '%env(resolve:DATABASE_URL_DEFAULT)%'
 
 services:
     _defaults:
@@ -18,22 +19,24 @@ services:
             - '%env(TELEGRAM_GROUP_CHAT_ID)%'
             - '%env(TELEGRAM_ADMIN_CHAT_ID)%'
 
-    connection.dbal:
+    repository.dbal.connection:
         class: Doctrine\DBAL\Connection
-        factory: 'Doctrine\DBAL\DriverManager::getConnection'
+        factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
         arguments:
             - url: '%db_url%'
               driver: 'pdo_pgsql'
 
-    migration.dbal:
-        class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalMigration
+    repository.dbal.connection_default:
+        class: Doctrine\DBAL\Connection
+        factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
         arguments:
-            - '@connection.dbal'
+            - url: '%db_url_default%'
+              driver: 'pdo_pgsql'
 
     repository.dbal:
         class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository
         arguments:
-            - '@connection.dbal'
+            - '@repository.dbal.connection'
 
     repository.app.dbal:
         class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App\AppDbalRepository
@@ -52,8 +55,9 @@ services:
             - { name: console.command, command: 'new-game-notifier:check' }
 
     command.init:
-        class: AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\InitDbCommand
+        class: AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\Environment\EnvironmentInitCommand
         arguments:
-            - '@migration.dbal'
+            - '@repository.dbal.connection_default'
+            - '@repository.dbal.connection'
         tags:
-            - { name: console.command, command: 'new-game-notifier:init' }
+            - { name: console.command, command: 'environment:init' }

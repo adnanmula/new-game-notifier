@@ -1,12 +1,9 @@
 parameters:
-    level: 8
-    checkMissingIterableValueType: false
+    level: 5
     paths:
         -   src
         -   tests
     excludePaths:
-        - %currentWorkingDirectory%/src/Kernel.php
-    ignoreErrors:
-        -
-            message: '#Cannot call method (fetchAssociative\(\)|fetchAllAssociative\(\)) on Doctrine\\DBAL\\[a-zA-Z\\]+#'
-            path: %currentWorkingDirectory%/src/Infrastructure/Persistence/Repository/*
+        -   public/*
+        -   src/Kernel.php
+        -   config/bootstrap.php

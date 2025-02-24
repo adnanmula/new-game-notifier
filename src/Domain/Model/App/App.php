@@ -4,15 +4,15 @@ namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\App;
 
 final class App
 {
-    private const URL_APP = 'https://store.steampowered.com/app/';
-    private const URL_IMAGES = 'http://media.steampowered.com/steamcommunity/public/images/apps/';
+    private const string URL_APP = 'https://store.steampowered.com/app/';
+    private const string URL_LOGO_IMAGES = 'http://media.steampowered.com/steamcommunity/public/images/apps/';
 
-    private function __construct(private int $appid, private string $name, private string $icon, private string $header)
+    private function __construct(private int $appid, private string $name, private string $icon)
     {}
 
-    public static function create(int $appid, string $name, string $icon, string $header): self
+    public static function create(int $appid, string $name, string $icon): self
     {
-        return new self($appid, $name, $icon, $header);
+        return new self($appid, $name, $icon);
     }
 
     public function appid(): int
@@ -37,16 +37,11 @@ final class App
 
     public function iconUrl(): string
     {
-        return self::URL_IMAGES . $this->appid . '/' . $this->icon . '.jpg';
-    }
-
-    public function header(): string
-    {
-        return $this->header;
+        return self::URL_LOGO_IMAGES . $this->appid . '/' . $this->icon . '.jpg';
     }
 
     public function headerUrl(): string
     {
-        return self::URL_IMAGES . $this->appid . '/' . $this->header . '.jpg';
+        return 'https://cdn.akamai.steamstatic.com/steam/apps/' . $this->appid . '/header.jpg';
     }
 }
