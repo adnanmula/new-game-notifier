@@ -13,7 +13,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     public function app(int $appId): ?App
     {
         $result = $this->connection->createQueryBuilder()
-            ->select('a.app_id, a.name, a.icon')
+            ->select('a.app_id, a.name, a.icon, a.playtime')
             ->from(self::TABLE, 'a')
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
@@ -44,26 +44,28 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt = $this->connection->prepare(
             \sprintf(
                 '
-                    INSERT INTO %s (app_id, name, icon)
-                    VALUES (:app_id, :name, :icon)
+                    INSERT INTO %s (app_id, name, icon, playtime)
+                    VALUES (:app_id, :name, :icon, :playtime)
                     ON CONFLICT (app_id) DO UPDATE SET 
                     app_id = :app_id,
                     name = :name,
-                    icon = :icon
+                    icon = :icon,
+                    playtime = :playtime
                 ',
                 self::TABLE,
             ),
         );
 
-        $stmt->bindValue('app_id', $app->appid(), \PDO::PARAM_INT);
-        $stmt->bindValue('name', $app->name(), \PDO::PARAM_STR);
-        $stmt->bindValue('icon', $app->icon(), \PDO::PARAM_STR);
+        $stmt->bindValue('app_id', $app->appid, \PDO::PARAM_INT);
+        $stmt->bindValue('name', $app->name, \PDO::PARAM_STR);
+        $stmt->bindValue('icon', $app->icon, \PDO::PARAM_STR);
+        $stmt->bindValue('playtime', $app->playedTime, \PDO::PARAM_INT);
 
         $stmt->executeStatement();
     }
 
     private function map(array $result): App
     {
-        return App::create($result['app_id'], $result['name'], $result['icon']);
+        return new App($result['app_id'], $result['name'], $result['icon'], $result['playtime']);
     }
 }

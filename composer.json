@@ -20,7 +20,7 @@
         "symfony/yaml": "^7.2"
     },
     "require-dev": {
-        "adnanmula/coding-standard": "^0.0.11",
+        "adnanmula/coding-standard": "^0.0.12",
         "phpro/grumphp": "^2.10",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9",

@@ -60,7 +60,7 @@ final class CheckNewGamesCommand extends Command
 
                 $this->appRepository->save($app);
 
-                $output->writeln($app->appid() . ': ' . $app->name() . ' saved.');
+                $output->writeln($app->appid . ': ' . $app->name . ' saved.');
 
                 return $app;
             },
@@ -81,7 +81,7 @@ final class CheckNewGamesCommand extends Command
         \array_walk(
             $toNotify,
             function (App $app): void {
-                $this->communicationClient->say('[' . $app->name() . '](' . $app->url() . ')');
+                $this->communicationClient->say('[' . $app->name . '](' . $app->url . ')');
             },
         );
     }

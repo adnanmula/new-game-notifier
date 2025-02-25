@@ -12,6 +12,7 @@ class SteamClient
 {
     private const string ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
     private const string ENDPOINT_GAME_INFO = 'api/appdetails/';
+    private const string ENDPOINT_GAME_REVIEWS = 'appreviews/%s';
 
     public function __construct(
         private string $apiKey,
@@ -53,16 +54,27 @@ class SteamClient
             return null;
         }
 
-        return App::create(
+        return new App(
             $rawResponse['data']['steam_appid'],
             $rawResponse['data']['type'],
             $rawResponse['data']['name'],
         );
     }
 
+    public function appReviews(int $appid): array
+    {
+        $response = $this->steamStorefrontClient->request(
+            Request::METHOD_GET,
+            sprintf(self::ENDPOINT_GAME_REVIEWS, $appid),
+            ['query' => ['json' => 1]],
+        );
+
+        return Json::decode($response->getContent());
+    }
+
     private function map(array $result): Library
     {
-        return Library::create(
+        return new Library(
             $result['game_count'],
             ...\array_map(fn (array $game) => $this->mapApp($game), $result['games']),
         );
@@ -70,10 +82,11 @@ class SteamClient
 
     private function mapApp(array $result): App
     {
-        return App::create(
+        return new App(
             $result['appid'],
             $result['name'],
             $result['img_icon_url'],
+            $result['playtime_forever'],
         );
     }
 }

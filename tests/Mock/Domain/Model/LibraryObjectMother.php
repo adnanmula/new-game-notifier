@@ -16,8 +16,8 @@ final class LibraryObjectMother
         $this->appCount = 2;
 
         $this->addApps(
-            App::create(40, 'App40', 'icon-40'),
-            App::create(60, 'App60', 'icon-60'),
+            new App(40, 'App40', 'icon-40'),
+            new App(60, 'App60', 'icon-60'),
         );
     }
 
@@ -39,7 +39,7 @@ final class LibraryObjectMother
 
     public function build(): Library
     {
-        return Library::create(
+        return new Library(
             $this->appCount,
             ...$this->apps,
         );

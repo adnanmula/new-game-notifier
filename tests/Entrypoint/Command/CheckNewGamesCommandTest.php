@@ -42,8 +42,8 @@ final class CheckNewGamesCommandTest extends TestCase
     {
         $this->communicationClient->expects($this->never())->method('say');
 
-        $app1 = App::create(10, 'game1', 'icon1');
-        $app2 = App::create(20, 'game2', 'icon2');
+        $app1 = new App(10, 'game1', 'icon1');
+        $app2 = new App(20, 'game2', 'icon2');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -57,7 +57,7 @@ final class CheckNewGamesCommandTest extends TestCase
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([$app2->appid()]);
+            ->willReturn([$app2->appid]);
 
         $this->appRepository->expects($this->once())
             ->method('save')
@@ -74,8 +74,8 @@ final class CheckNewGamesCommandTest extends TestCase
     {
         $this->communicationClient->expects($this->exactly(2))->method('say');
 
-        $app1 = App::create(10, 'game1', 'icon1');
-        $app2 = App::create(20, 'game2', 'icon2');
+        $app1 = new App(10, 'game1', 'icon1');
+        $app2 = new App(20, 'game2', 'icon2');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -89,7 +89,7 @@ final class CheckNewGamesCommandTest extends TestCase
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([$library->apps()[0]->appid()]);
+            ->willReturn([$library->apps[0]->appid]);
 
         $this->appRepository->expects($this->once())
             ->method('save')
@@ -104,9 +104,9 @@ final class CheckNewGamesCommandTest extends TestCase
     /** @test */
     public function given_missing_games_then_sync_them(): void
     {
-        $app1 = App::create(10, 'game1', 'icon1');
-        $app2 = App::create(20, 'game2', 'icon2');
-        $app3 = App::create(30, 'game3', 'icon3');
+        $app1 = new App(10, 'game1', 'icon1');
+        $app2 = new App(20, 'game2', 'icon2');
+        $app3 = new App(30, 'game3', 'icon3');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -120,10 +120,10 @@ final class CheckNewGamesCommandTest extends TestCase
 
         $this->appRepository->expects($this->once())
             ->method('all')
-            ->willReturn([$app1->appid()]);
+            ->willReturn([$app1->appid]);
 
-        $app = App::create(20, 'game2', 'icon2');
-        $app2 = App::create(30, 'game3', 'icon3');
+        $app = new App(20, 'game2', 'icon2');
+        $app2 = new App(30, 'game3', 'icon3');
 
         $this->appRepository->expects($this->exactly(2))
             ->method('save')
@@ -138,9 +138,9 @@ final class CheckNewGamesCommandTest extends TestCase
     /** @test */
     public function given_no_missing_games_then_do_nothing(): void
     {
-        $app1 = App::create(10, 'game1', 'icon1');
-        $app2 = App::create(20, 'game2', 'icon2');
-        $app3 = App::create(30, 'game3', 'icon3');
+        $app1 = new App(10, 'game1', 'icon1');
+        $app2 = new App(20, 'game2', 'icon2');
+        $app3 = new App(30, 'game3', 'icon3');
 
         $provider = new LibraryObjectMother();
         $provider->resetApps();
@@ -155,9 +155,9 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->appRepository->expects($this->once())
             ->method('all')
             ->willReturn([
-                $app1->appid(),
-                $app2->appid(),
-                $app3->appid(),
+                $app1->appid,
+                $app2->appid,
+                $app3->appid,
             ]);
 
         $this->client->expects($this->never())->method('appInfo');

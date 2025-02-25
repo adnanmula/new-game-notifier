@@ -11,6 +11,7 @@ final class App extends AbstractMigration
                 app_id int NOT NULL,
                 name character varying(128) NOT NULL,
                 icon character varying(128) NOT NULL,
+                playtime int NOT NULL,
                 PRIMARY KEY(app_id)
             )',
         );

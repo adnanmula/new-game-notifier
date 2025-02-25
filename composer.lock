@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72d2654fdda889b00f48fce8a562bd2a",
+    "content-hash": "ca22050c3985fa45c8e3208bf483a4a8",
     "packages": [
         {
             "name": "adnanmula/telegram-send-message",
@@ -3469,21 +3469,21 @@
     "packages-dev": [
         {
             "name": "adnanmula/coding-standard",
-            "version": "0.0.11",
+            "version": "0.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adnanmula/coding-standard.git",
-                "reference": "ee29dd9805e399c7c21551e4069075449a8f4d8f"
+                "reference": "9d885a1056081a7e8a178a12b2ee52efd562c58e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adnanmula/coding-standard/zipball/ee29dd9805e399c7c21551e4069075449a8f4d8f",
-                "reference": "ee29dd9805e399c7c21551e4069075449a8f4d8f",
+                "url": "https://api.github.com/repos/adnanmula/coding-standard/zipball/9d885a1056081a7e8a178a12b2ee52efd562c58e",
+                "reference": "9d885a1056081a7e8a178a12b2ee52efd562c58e",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.4",
-                "slevomat/coding-standard": "^8.15"
+                "slevomat/coding-standard": "^8.16"
             },
             "type": "library",
             "autoload": {
@@ -3497,15 +3497,15 @@
             ],
             "authors": [
                 {
-                    "name": "Adnan Alfonso Mula Bakkar",
+                    "name": "Adnan Mula",
                     "email": "adnan.mula.bakkar@gmail.com"
                 }
             ],
             "support": {
                 "issues": "https://github.com/adnanmula/coding-standard/issues",
-                "source": "https://github.com/adnanmula/coding-standard/tree/0.0.11"
+                "source": "https://github.com/adnanmula/coding-standard/tree/0.0.12"
             },
-            "time": "2024-12-12T15:50:05+00:00"
+            "time": "2025-02-25T15:44:26+00:00"
         },
         {
             "name": "amphp/amp",
