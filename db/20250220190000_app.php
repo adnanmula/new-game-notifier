@@ -12,6 +12,8 @@ final class App extends AbstractMigration
                 name character varying(128) NOT NULL,
                 icon character varying(128) NOT NULL,
                 playtime int NOT NULL,
+                review_score int DEFAULT NULL,
+                review_amount int DEFAULT NULL,
                 PRIMARY KEY(app_id)
             )',
         );

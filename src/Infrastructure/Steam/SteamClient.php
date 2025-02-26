@@ -61,6 +61,7 @@ class SteamClient
         );
     }
 
+    /** @return array<int, int> */
     public function appReviews(int $appid): array
     {
         $response = $this->steamStorefrontClient->request(
@@ -69,7 +70,19 @@ class SteamClient
             ['query' => ['json' => 1]],
         );
 
-        return Json::decode($response->getContent());
+        $data = Json::decode($response->getContent());
+
+        if (1 !== $data['success']) {
+            throw new \Exception('Error on app reviews fetch');
+        }
+
+        $positive = $data['query_summary']['total_positive'];
+        $total = $data['query_summary']['total_reviews'];
+
+        return [
+            (int) ($positive * 100 / $total),
+            $data['query_summary']['total_reviews'],
+        ];
     }
 
     private function map(array $result): Library

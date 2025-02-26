@@ -12,6 +12,8 @@ final class App
         public readonly string $name,
         public readonly string $icon,
         public readonly int $playedTime = 0,
+        public readonly ?int $reviewScore = null,
+        public readonly ?int $reviewAmount = null,
     ) {}
 
     public string $url {

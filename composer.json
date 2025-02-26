@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
+        "adnanmula/criteria": "^0.1.0",
         "adnanmula/telegram-send-message": "^0.0.5",
         "doctrine/dbal": "^3",
         "robmorgan/phinx": "^0.16",

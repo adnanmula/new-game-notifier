@@ -29,12 +29,15 @@ final class CheckNewGamesCommand extends Command
     {
         $this->setName(self::NAME)
             ->setDescription('Check new games added')
-            ->addOption('notifications', 't', InputOption::VALUE_OPTIONAL, 'Telegram notifications', false);
+            ->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
+            ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $notificationsEnabled = $this->notificationsEnabled($input);
+        $notificationsEnabled = $input->getOption('notifications');
+        $importReview = $input->getOption('reviews');
+
         $library = $this->client->ownedGames($this->steamUserId);
 
         if (null === $library) {
@@ -51,7 +54,7 @@ final class CheckNewGamesCommand extends Command
         );
 
         $toNotify = \array_map(
-            function (int $missing) use ($library, $output) {
+            function (int $missing) use ($library, $importReview, $output) {
                 $app = $library->app($missing);
 
                 if (null === $app) {
@@ -61,6 +64,13 @@ final class CheckNewGamesCommand extends Command
                 $this->appRepository->save($app);
 
                 $output->writeln($app->appid . ': ' . $app->name . ' saved.');
+
+                if ($importReview) {
+                    [$score, $amount] = $this->client->appReviews($app->appid);
+                    $this->appRepository->updateReviewScore($app->appid, $score, $amount);
+
+                    $output->writeln(' | Review imported');
+                }
 
                 return $app;
             },
@@ -84,14 +94,5 @@ final class CheckNewGamesCommand extends Command
                 $this->communicationClient->say('[' . $app->name . '](' . $app->url . ')');
             },
         );
-    }
-
-    private function notificationsEnabled(InputInterface $input): bool
-    {
-        if (true === $input->hasParameterOption(['--notifications', '-t'])) {
-            return 'true' === $input->getOption('notifications') || null === $input->getOption('notifications');
-        }
-
-        return true;
     }
 }

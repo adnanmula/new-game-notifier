@@ -64,7 +64,7 @@ final class CheckNewGamesCommandTest extends TestCase
             ->with($app1);
 
         $commandTester = new CommandTester($this->command);
-        $result = $commandTester->execute(['-t' => 'false']);
+        $result = $commandTester->execute([]);
 
         $this->assertEquals(0, $result);
     }
@@ -96,7 +96,7 @@ final class CheckNewGamesCommandTest extends TestCase
             ->with($app2);
 
         $commandTester = new CommandTester($this->command);
-        $result = $commandTester->execute([]);
+        $result = $commandTester->execute(['-t' => 'true']);
 
         $this->assertEquals(0, $result);
     }
