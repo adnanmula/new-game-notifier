@@ -49,3 +49,9 @@ cs: ## run phpcs checker
 .PHONY: ps
 ps: ## status from all containers
 	docker compose -f ${FILE} ps
+
+import-only-games:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check"
+
+import-everything:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check -r -c"

@@ -7,6 +7,7 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
 use AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use AdnanMula\Steam\NewGameNotifier\Tests\Mock\Domain\Model\LibraryObjectMother;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -15,7 +16,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 final class CheckNewGamesCommandTest extends TestCase
 {
-    private MockObject $client;
+    private MockObject $steamClient;
+    private MockObject $completionClient;
     private MockObject $communicationClient;
     private MockObject $appRepository;
     private string $userId;
@@ -24,13 +26,15 @@ final class CheckNewGamesCommandTest extends TestCase
 
     public function setUp(): void
     {
-        $this->client = $this->createMock(SteamClient::class);
+        $this->steamClient = $this->createMock(SteamClient::class);
+        $this->completionClient = $this->createMock(HltbClient::class);
         $this->communicationClient = $this->createMock(CommunicationClient::class);
         $this->appRepository = $this->createMock(AppRepository::class);
         $this->userId = '70000000';
 
         $this->command = new CheckNewGamesCommand(
-            $this->client,
+            $this->steamClient,
+            $this->completionClient,
             $this->communicationClient,
             $this->appRepository,
             $this->userId,
@@ -50,7 +54,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2);
         $library = $provider->build();
 
-        $this->client->expects($this->once())
+        $this->steamClient->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
@@ -82,7 +86,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2);
         $library = $provider->build();
 
-        $this->client->expects($this->once())
+        $this->steamClient->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
@@ -113,7 +117,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2, $app3);
         $library = $provider->build();
 
-        $this->client->expects($this->once())
+        $this->steamClient->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
@@ -147,7 +151,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2, $app3);
         $library = $provider->build();
 
-        $this->client->expects($this->once())
+        $this->steamClient->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
@@ -160,7 +164,7 @@ final class CheckNewGamesCommandTest extends TestCase
                 $app3->appid,
             ]);
 
-        $this->client->expects($this->never())->method('appInfo');
+        $this->steamClient->expects($this->never())->method('appInfo');
         $this->appRepository->expects($this->never())->method('save');
 
         $commandTester = new CommandTester($this->command);
@@ -175,13 +179,13 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->communicationClient->expects($this->once())->method('log')->with('Fallo en GetOwnedGames');
         $this->expectException(FailedToLoadLibraryException::class);
 
-        $this->client->expects($this->once())
+        $this->steamClient->expects($this->once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn(null);
 
         $this->appRepository->expects($this->never())->method('all');
-        $this->client->expects($this->never())->method('appInfo');
+        $this->steamClient->expects($this->never())->method('appInfo');
         $this->appRepository->expects($this->never())->method('save');
 
         $commandTester = new CommandTester($this->command);

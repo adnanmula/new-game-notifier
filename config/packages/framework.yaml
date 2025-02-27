@@ -21,3 +21,21 @@ framework:
                 base_uri: 'http://api.steampowered.com'
             steam_storefront.client:
                 base_uri: 'https://store.steampowered.com'
+            hltb.client:
+                base_uri: 'https://howlongtobeat.com'
+                headers:
+                    authority: 'howlongtobeat.com'
+                    accept: '*/*'
+                    accept-language: 'es-ES,es;q=0.9'
+                    cache-control: 'no-cache'
+                    content-type: 'application/json'
+                    origin: 'https://howlongtobeat.com'
+                    pragma: 'no-cache'
+                    referer: 'https://howlongtobeat.com'
+                    sec-ch-ua: '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"'
+                    sec-ch-ua-mobile: '?0'
+                    sec-ch-ua-platform: '"Linux"'
+                    sec-fetch-dest: 'empty'
+                    sec-fetch-mode: 'cors'
+                    sec-fetch-site: 'same-origin'
+                    user-agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'

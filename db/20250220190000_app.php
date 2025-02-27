@@ -14,6 +14,10 @@ final class App extends AbstractMigration
                 playtime int NOT NULL,
                 review_score int DEFAULT NULL,
                 review_amount int DEFAULT NULL,
+                completion_main int DEFAULT NULL,
+                completion_with_extras int DEFAULT NULL,
+                completion_full int DEFAULT NULL,
+                completion_avg int DEFAULT NULL,
                 PRIMARY KEY(app_id)
             )',
         );

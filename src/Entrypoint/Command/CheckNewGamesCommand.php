@@ -6,6 +6,7 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +18,8 @@ final class CheckNewGamesCommand extends Command
     private const string NAME = 'new-game-notifier:check';
 
     public function __construct(
-        private SteamClient $client,
+        private SteamClient $steamClient,
+        private HltbClient $completionClient,
         private CommunicationClient $communicationClient,
         private AppRepository $appRepository,
         private string $steamUserId,
@@ -30,15 +32,17 @@ final class CheckNewGamesCommand extends Command
         $this->setName(self::NAME)
             ->setDescription('Check new games added')
             ->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
-            ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score');
+            ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
+            ->addOption('completion', 'c', InputOption::VALUE_NONE, 'Import app completion data');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $notificationsEnabled = $input->getOption('notifications');
         $importReview = $input->getOption('reviews');
+        $importCompletion = $input->getOption('completion');
 
-        $library = $this->client->ownedGames($this->steamUserId);
+        $library = $this->steamClient->ownedGames($this->steamUserId);
 
         if (null === $library) {
             if ($notificationsEnabled) {
@@ -54,7 +58,7 @@ final class CheckNewGamesCommand extends Command
         );
 
         $toNotify = \array_map(
-            function (int $missing) use ($library, $importReview, $output) {
+            function (int $missing) use ($library, $importReview, $importCompletion, $output) {
                 $app = $library->app($missing);
 
                 if (null === $app) {
@@ -66,10 +70,17 @@ final class CheckNewGamesCommand extends Command
                 $output->writeln($app->appid . ': ' . $app->name . ' saved.');
 
                 if ($importReview) {
-                    [$score, $amount] = $this->client->appReviews($app->appid);
+                    [$score, $amount] = $this->steamClient->appReviews($app->appid);
                     $this->appRepository->updateReviewScore($app->appid, $score, $amount);
 
                     $output->writeln(' | Review imported');
+                }
+
+                if ($importCompletion) {
+                    $completionData = $this->completionClient->completionData($app->name);
+                    $this->appRepository->updateCompletionData($app->appid, $completionData);
+
+                    $output->writeln(' | Completion data imported');
                 }
 
                 return $app;

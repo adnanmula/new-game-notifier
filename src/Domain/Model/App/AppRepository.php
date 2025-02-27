@@ -3,6 +3,7 @@
 namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\App;
 
 use AdnanMula\Criteria\Criteria;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\CompletionData;
 
 interface AppRepository
 {
@@ -14,4 +15,5 @@ interface AppRepository
     public function searchOne(Criteria $criteria): ?App;
     public function save(App $app): void;
     public function updateReviewScore(int $appId, int $score, int $amount);
+    public function updateCompletionData(int $appId, CompletionData $completionData);
 }

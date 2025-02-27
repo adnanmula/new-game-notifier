@@ -16,13 +16,6 @@ services:
             Doctrine\DBAL\Connection $connection: '@repository.dbal.connection'
             Doctrine\DBAL\Connection $defaultConnection: '@repository.dbal.connection_default'
 
-    client.communication.telegram:
-        class: AdnanMula\Steam\NewGameNotifier\Infrastructure\Communication\TelegramClient
-        arguments:
-            - '%env(TELEGRAM_TOKEN)%'
-            - '%env(TELEGRAM_GROUP_CHAT_ID)%'
-            - '%env(TELEGRAM_ADMIN_CHAT_ID)%'
-
     repository.dbal.connection:
         class: Doctrine\DBAL\Connection
         factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
@@ -37,21 +30,15 @@ services:
             - url: '%db_url_default%'
               driver: 'pdo_pgsql'
 
-    AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\:
-        resource: '../src/Domain/Service/Communication'
+    AdnanMula\Steam\NewGameNotifier\Domain\:
+        resource: '../src/Domain'
 
-    AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\:
-        resource: '../src/Infrastructure/Persistence/Repository'
-
-    AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\:
-        resource: '../src/Infrastructure/Steam'
-
-    AdnanMula\Steam\NewGameNotifier\Infrastructure\Communication\:
-        resource: '../src/Infrastructure/Communication'
-
-    AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository:
-        alias: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App\AppDbalRepository
+    AdnanMula\Steam\NewGameNotifier\Infrastructure\:
+        resource: '../src/Infrastructure'
 
     AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\:
         resource: '../src/Entrypoint/Command'
         tags: [ 'console.command' ]
+
+    AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository:
+        alias: AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\App\AppDbalRepository

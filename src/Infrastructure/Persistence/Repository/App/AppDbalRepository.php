@@ -6,6 +6,7 @@ use AdnanMula\Criteria\Criteria;
 use AdnanMula\Criteria\DbalCriteriaAdapter;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\CompletionData;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository;
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
@@ -15,7 +16,8 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     public function app(int $appId): ?App
     {
         $result = $this->connection->createQueryBuilder()
-            ->select('a.app_id, a.name, a.icon, a.playtime, a.review_score, a.review_amount')
+            ->select('a.app_id, a.name, a.icon, a.playtime, a.review_score')
+            ->addSelect('a.completion_main, a.completion_with_extras, a.completion_full, a.completion_avg')
             ->from(self::TABLE, 'a')
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
@@ -71,15 +73,19 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt = $this->connection->prepare(
             \sprintf(
                 '
-                    INSERT INTO %s (app_id, name, icon, playtime, review_score, review_amount)
-                    VALUES (:app_id, :name, :icon, :playtime, :review_score, :review_amount)
+                    INSERT INTO %s (app_id, name, icon, playtime, review_score, review_amount, completion_main, completion_with_extras, completion_full, completion_avg)
+                    VALUES (:app_id, :name, :icon, :playtime, :review_score, :review_amount, :completion_main, :completion_with_extras, :completion_full, :completion_avg)
                     ON CONFLICT (app_id) DO UPDATE SET 
                     app_id = :app_id,
                     name = :name,
                     icon = :icon,
                     playtime = :playtime,
                     review_score = :review_score,
-                    review_amount = :review_amount
+                    review_amount = :review_amount,
+                    completion_main = :completion_main,
+                    completion_with_extras = :completion_with_extras,
+                    completion_full = :completion_full,
+                    completion_avg = :completion_avg
                 ',
                 self::TABLE,
             ),
@@ -91,6 +97,10 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->bindValue('playtime', $app->playedTime, \PDO::PARAM_INT);
         $stmt->bindValue('review_score', $app->reviewScore, \PDO::PARAM_INT);
         $stmt->bindValue('review_amount', $app->reviewAmount, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_main', $app->completionMain, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_with_extras', $app->completionWithExtras, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_full', $app->completionFull, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_avg', $app->completionAvg, \PDO::PARAM_INT);
 
         $stmt->executeStatement();
     }
@@ -115,6 +125,31 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->executeStatement();
     }
 
+    public function updateCompletionData(int $appId, CompletionData $completionData)
+    {
+        $stmt = $this->connection->prepare(
+            \sprintf(
+                'UPDATE %s SET
+                completion_main = :completion_main,
+                completion_with_extras = :completion_with_extras,
+                completion_full = :completion_full,
+                completion_avg = :completion_avg
+                WHERE app_id = :app_id;
+                ',
+                self::TABLE,
+            ),
+        );
+
+        $stmt->bindValue('app_id', $appId, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_main', $completionData->completionMain, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_with_extras', $completionData->completionWithExtras, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_full', $completionData->completionFull, \PDO::PARAM_INT);
+        $stmt->bindValue('completion_avg', $completionData->completionAvg, \PDO::PARAM_INT);
+
+        $stmt->executeStatement();
+    }
+
+
     private function map(array $result): App
     {
         return new App(
@@ -124,6 +159,10 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             $result['playtime'],
             $result['review_score'],
             $result['review_amount'],
+            $result['completion_main'],
+            $result['completion_with_extras'],
+            $result['completion_full'],
+            $result['completion_avg'],
         );
     }
 }
