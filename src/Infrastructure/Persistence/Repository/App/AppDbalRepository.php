@@ -62,7 +62,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     public function searchOne(Criteria $criteria): ?App
     {
         $result = $this->search(
-            new Criteria($criteria->offset(), 1, $criteria->sorting(), ...$criteria->filterGroups())
+            new Criteria($criteria->offset(), 1, $criteria->sorting(), ...$criteria->filterGroups()),
         );
 
         return $result[0] ?? null;
