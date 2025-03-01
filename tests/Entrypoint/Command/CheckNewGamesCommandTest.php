@@ -6,7 +6,7 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
-use AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\CheckNewGamesCommand;
+use AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\ImportGamesNewCommand;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use AdnanMula\Steam\NewGameNotifier\Tests\Mock\Domain\Model\LibraryObjectMother;
@@ -22,7 +22,7 @@ final class CheckNewGamesCommandTest extends TestCase
     private MockObject $appRepository;
     private string $userId;
 
-    private CheckNewGamesCommand $command;
+    private ImportGamesNewCommand $command;
 
     public function setUp(): void
     {
@@ -32,7 +32,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->appRepository = $this->createMock(AppRepository::class);
         $this->userId = '70000000';
 
-        $this->command = new CheckNewGamesCommand(
+        $this->command = new ImportGamesNewCommand(
             $this->steamClient,
             $this->completionClient,
             $this->communicationClient,

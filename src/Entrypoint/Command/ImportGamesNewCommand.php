@@ -13,9 +13,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class CheckNewGamesCommand extends Command
+final class ImportGamesNewCommand extends Command
 {
-    private const string NAME = 'new-game-notifier:check';
+    private const string NAME = 'steam:import:new-games';
 
     public function __construct(
         private SteamClient $steamClient,

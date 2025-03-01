@@ -10,9 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ImportRecentGamesCommand extends Command
+final class ImportGamesRecentCommand extends Command
 {
-    private const string NAME = 'new-game-notifier:check-recent';
+    private const string NAME = 'steam:import:recent-games';
 
     public function __construct(
         private SteamClient $steamClient,

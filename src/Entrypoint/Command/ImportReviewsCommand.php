@@ -17,9 +17,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ImportGameReviewCommand extends Command
+final class ImportReviewsCommand extends Command
 {
-    private const string NAME = 'new-game-notifier:review';
+    private const string NAME = 'steam:import:reviews';
 
     public function __construct(
         private SteamClient $client,

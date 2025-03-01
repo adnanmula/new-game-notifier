@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ImportCompletionDataCommand extends Command
 {
-    private const string NAME = 'new-game-notifier:completion';
+    private const string NAME = 'steam:import:completions';
 
     public function __construct(
         private readonly HltbClient $client,
