@@ -11,6 +11,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class SteamClient
 {
     private const string ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
+    private const string ENDPOINT_RECENT_PLAYED_GAMES = 'IPlayerService/GetRecentlyPlayedGames/v1/';
     private const string ENDPOINT_GAME_INFO = 'api/appdetails/';
     private const string ENDPOINT_GAME_REVIEWS = 'appreviews/%s';
 
@@ -38,6 +39,26 @@ class SteamClient
         }
 
         return $this->map($rawResponse['response']);
+    }
+
+    /** @return array<App> */
+    public function recentlyPlayedGames(string $userId): array
+    {
+        $response = $this->steamApiClient->request(Request::METHOD_GET, self::ENDPOINT_RECENT_PLAYED_GAMES, [
+            'query' => [
+                'key' => $this->apiKey,
+                'steamid' => $userId,
+                'format' => 'json',
+            ],
+        ]);
+
+        $rawResponse = Json::decode($response->getContent());
+
+        if (false === \array_key_exists('response', $rawResponse)) {
+            return [];
+        }
+
+        return \array_map(fn (array $a): App => $this->mapApp($a), $rawResponse['response']['games']);
     }
 
     public function appInfo(int $appid): ?App
@@ -79,10 +100,13 @@ class SteamClient
         $positive = $data['query_summary']['total_positive'];
         $total = $data['query_summary']['total_reviews'];
 
-        return [
-            (int) ($positive * 100 / $total),
-            $data['query_summary']['total_reviews'],
-        ];
+        $score = 0;
+
+        if (0 !== $total) {
+            $score = (int) ($positive * 100 / $total);
+        }
+
+        return [$score, $total];
     }
 
     private function map(array $result): Library

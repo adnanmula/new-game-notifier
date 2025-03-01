@@ -105,6 +105,25 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->executeStatement();
     }
 
+    public function updatePlaytime(int $appId, int $amount)
+    {
+        $stmt = $this->connection->prepare(
+            \sprintf(
+                '
+                    UPDATE %s
+                    SET playtime = :playtime
+                    WHERE app_id = :app_id;
+                ',
+                self::TABLE,
+            ),
+        );
+
+        $stmt->bindValue('app_id', $appId, \PDO::PARAM_INT);
+        $stmt->bindValue('playtime', $amount, \PDO::PARAM_INT);
+
+        $stmt->executeStatement();
+    }
+
     public function updateReviewScore(int $appId, int $score, int $amount)
     {
         $stmt = $this->connection->prepare(
