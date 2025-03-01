@@ -50,11 +50,17 @@ cs: ## run phpcs checker
 ps: ## status from all containers
 	docker compose -f ${FILE} ps
 
-import-only-games:
-	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check"
-
-import-recent:
-	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check-recent"
+import-games:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:games"
 
 import-everything:
-	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check -r -c"
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:games -rc"
+
+import-games-recent:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:games-recent"
+
+import-reviews:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:reviews"
+
+import-completions:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:completions"

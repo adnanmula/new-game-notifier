@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ImportGamesNewCommand extends Command
 {
-    private const string NAME = 'steam:import:new-games';
+    private const string NAME = 'steam:import:games';
 
     public function __construct(
         private SteamClient $steamClient,
@@ -30,7 +30,7 @@ final class ImportGamesNewCommand extends Command
     protected function configure(): void
     {
         $this->setName(self::NAME)
-            ->setDescription('Check new games added')
+            ->setDescription('Import games')
             ->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
             ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
             ->addOption('completion', 'c', InputOption::VALUE_NONE, 'Import app completion data');
