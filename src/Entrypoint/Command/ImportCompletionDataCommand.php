@@ -66,6 +66,12 @@ final class ImportCompletionDataCommand extends Command
         foreach ($apps as $app) {
             $completionData = $this->client->completionData($app->name);
 
+            if (null === $completionData) {
+                $output->writeln('Cant import ' . $app->name);
+
+                continue;
+            }
+
             $this->repository->updateCompletionData($app->appid, $completionData);
 
             $output->writeln(\sprintf(

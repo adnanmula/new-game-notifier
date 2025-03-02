@@ -56,6 +56,15 @@ final class ImportGamesRecentCommand extends Command
 
             if ($importCompletion) {
                 $completionData = $this->completionClient->completionData($app->name);
+
+                if (null === $completionData) {
+                    $output->writeln(' | Cant import completion data');
+                } else {
+                    $this->repository->updateCompletionData($app->appid, $completionData);
+
+                    $output->writeln(' | Completion data imported');
+                }
+
                 $this->repository->updateCompletionData($app->appid, $completionData);
 
                 $output->writeln(' | Completion data imported');

@@ -13,7 +13,7 @@ class HltbClient
         private HttpClientInterface $hltbClient,
     ) {}
 
-    public function completionData(string $gameName): CompletionData
+    public function completionData(string $gameName): ?CompletionData
     {
         $response = $this->hltbClient->request(Request::METHOD_POST, self::ENDPOINT, [
             'json' => [
@@ -43,6 +43,10 @@ class HltbClient
         ]);
 
         $response = $response->toArray();
+
+        if (0 === \count($response['data'])) {
+            return null;
+        }
 
         return new CompletionData(
             $gameName,
