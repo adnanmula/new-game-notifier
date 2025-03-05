@@ -13,6 +13,7 @@ services:
             string $telegramToken: '%env(TELEGRAM_TOKEN)%'
             string $groupChatId: '%env(TELEGRAM_GROUP_CHAT_ID)%'
             string $adminChatId: '%env(TELEGRAM_ADMIN_CHAT_ID)%'
+            string $hltbToken: '%env(HLTB_TOKEN)%'
             Doctrine\DBAL\Connection $connection: '@repository.dbal.connection'
             Doctrine\DBAL\Connection $defaultConnection: '@repository.dbal.connection_default'
 

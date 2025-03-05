@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ImportGamesRecentCommand extends Command
 {
-    private const string NAME = 'steam:import:games-recent';
+    private const string NAME = 'steam:import:played-recent';
 
     public function __construct(
         private SteamClient $steamClient,

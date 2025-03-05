@@ -7,18 +7,25 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HltbClient
 {
-    private const string ENDPOINT = '/api/ouch/86d5ef1971943765';
+    private const string ENDPOINT = '/api/ouch/';
 
     public function __construct(
         private HttpClientInterface $hltbClient,
+        private string $hltbToken,
     ) {}
 
     public function completionData(string $gameName): ?CompletionData
     {
-        $response = $this->hltbClient->request(Request::METHOD_POST, self::ENDPOINT, [
+        $searchTerms = $this->formatName($gameName);
+
+        if (null === $searchTerms) {
+            return null;
+        }
+
+        $response = $this->hltbClient->request(Request::METHOD_POST, self::ENDPOINT . $this->hltbToken, [
             'json' => [
                 'searchType' => 'games',
-                'searchTerms' => \explode(' ', \mb_strtolower($gameName)),
+                'searchTerms' => $searchTerms,
                 'searchPage' => 1,
                 'size' => 1,
                 'searchOptions' => [
@@ -55,5 +62,55 @@ class HltbClient
             (int) ($response['data'][0]['comp_100'] / 60),
             (int) ($response['data'][0]['comp_all'] / 60),
         );
+    }
+
+    private function formatName(string $name): ?array
+    {
+        $name = \mb_strtolower($name);
+
+        $toIgnore = [
+            'demo',
+            'test server',
+            'public test',
+            'open beta',
+            'playable teaser',
+        ];
+
+        foreach ($toIgnore as $ignore) {
+            if (\str_ends_with($name, $ignore)) {
+                return null;
+            }
+        }
+
+        $toRemove = [
+            '™',
+            '®',
+            '©',
+            ':',
+            '&',
+            '(classic, 2005)',
+            '(1994 Classic Edition)',
+            'definitive edition',
+            'complete edition',
+            'deluxe edition',
+            'remastered',
+            'emperor edition',
+            'goty edition',
+            'game of the year edition',
+            'gold edition',
+        ];
+
+        $name = \str_replace($toRemove, '', $name);
+        $name = \str_replace([' - '], ' ', $name);
+
+        $name = \explode(' ', \mb_strtolower($name));
+
+        $lastElement = \end($name);
+
+        if (\str_starts_with($lastElement, '(') && \str_ends_with($lastElement, ')')) {
+            \array_pop($name);
+        }
+
+        return $name;
     }
 }
