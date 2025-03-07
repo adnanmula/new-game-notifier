@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 8
     paths:
         -   src
         -   tests
@@ -7,3 +7,5 @@ parameters:
         -   public/*
         -   src/Kernel.php
         -   config/bootstrap.php
+    ignoreErrors:
+        - identifier: missingType.iterableValue

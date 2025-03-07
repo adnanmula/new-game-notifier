@@ -14,7 +14,7 @@ interface AppRepository
     public function search(Criteria $criteria): array;
     public function searchOne(Criteria $criteria): ?App;
     public function save(App $app): void;
-    public function updatePlaytime(int $appId, int $amount);
-    public function updateReviewScore(int $appId, int $score, int $amount);
-    public function updateCompletionData(int $appId, CompletionData $completionData);
+    public function updatePlaytime(int $appId, int $amount): void;
+    public function updateReviewScore(int $appId, int $score, int $amount): void;
+    public function updateCompletionData(int $appId, CompletionData $completionData): void;
 }

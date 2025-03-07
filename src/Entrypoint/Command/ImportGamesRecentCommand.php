@@ -65,8 +65,6 @@ final class ImportGamesRecentCommand extends Command
                     $output->writeln(' | Completion data imported');
                 }
 
-                $this->repository->updateCompletionData($app->appid, $completionData);
-
                 $output->writeln(' | Completion data imported');
             }
         }

@@ -45,7 +45,7 @@ final class EnvironmentInitCommand extends Command
 
     private function database(OutputInterface $output): void
     {
-        $dbName = $this->databaaseName($this->connection->getParams()['url']);
+        $dbName = $this->databaseName($this->connection->getParams()['url'] ?? null);
 
         try {
             $this->defaultConnection->createSchemaManager()->dropDatabase($dbName);
@@ -57,11 +57,20 @@ final class EnvironmentInitCommand extends Command
         $output->writeln('Database created.');
     }
 
-    private function databaaseName(string $url): string
+    private function databaseName(?string $url): string
     {
-        $parsedUrl = \parse_url($url);
+        if (null === $url) {
+            throw new \Exception('Invalid connection dns');
+        }
 
-        return \ltrim($parsedUrl['path'], '/');
+        $parsedUrl = \parse_url($url);
+        $path = $parsedUrl['path'] ?? null;
+
+        if (null === $path) {
+            throw new \Exception('Invalid connection dns');
+        }
+
+        return \ltrim($path, '/');
     }
 
     private function migrations(OutputInterface $output): void

@@ -34,16 +34,16 @@ final class GetGameDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $appIds =$input->getArgument('appIds');
+        $appIds = $input->getArgument('appIds');
 
         $validIds = [];
         $invalidIds = [];
 
         foreach ($appIds as $appId) {
             if (true === ctype_digit($appId)) {
-                $validIds[] = $appId;
+                $validIds[] = (string) $appId;
             } else {
-                $invalidIds[] = $appId;
+                $invalidIds[] = (string) $appId;
             }
         }
 

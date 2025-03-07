@@ -105,7 +105,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->executeStatement();
     }
 
-    public function updatePlaytime(int $appId, int $amount)
+    public function updatePlaytime(int $appId, int $amount): void
     {
         $stmt = $this->connection->prepare(
             \sprintf(
@@ -124,7 +124,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->executeStatement();
     }
 
-    public function updateReviewScore(int $appId, int $score, int $amount)
+    public function updateReviewScore(int $appId, int $score, int $amount): void
     {
         $stmt = $this->connection->prepare(
             \sprintf(
@@ -144,7 +144,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->executeStatement();
     }
 
-    public function updateCompletionData(int $appId, CompletionData $completionData)
+    public function updateCompletionData(int $appId, CompletionData $completionData): void
     {
         $stmt = $this->connection->prepare(
             \sprintf(
