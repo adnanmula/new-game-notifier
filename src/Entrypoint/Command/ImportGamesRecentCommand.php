@@ -42,7 +42,7 @@ final class ImportGamesRecentCommand extends Command
 
             $output->writeln(\sprintf(
                 'Updated app: %s %s | %s mins',
-                \str_pad((string) $app->appid, 7, ' ', STR_PAD_LEFT),
+                \str_pad((string) $app->appid, 7, ' ', \STR_PAD_LEFT),
                 $app->name,
                 $app->playedTime,
             ));

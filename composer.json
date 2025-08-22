@@ -9,23 +9,22 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "adnanmula/criteria": "^0.1.0",
+        "adnanmula/criteria": "^0.4",
         "adnanmula/telegram-send-message": "^0.0.5",
-        "doctrine/dbal": "^3",
+        "doctrine/dbal": "^3.10",
         "robmorgan/phinx": "^0.16",
-        "symfony/console": "^7.2",
-        "symfony/dotenv": "^7.2",
+        "symfony/console": "^7.3",
+        "symfony/dotenv": "^7.3",
         "symfony/flex": "^2.4",
-        "symfony/framework-bundle": "^7.2",
-        "symfony/http-client": "7.2.*",
-        "symfony/yaml": "^7.2"
+        "symfony/framework-bundle": "^7.3",
+        "symfony/http-client": "7.3.*",
+        "symfony/yaml": "^7.3"
     },
     "require-dev": {
-        "adnanmula/coding-standard": "^0.0.12",
-        "phpro/grumphp": "^2.10",
+        "adnanmula/coding-standard": "^0.0.13",
+        "phpro/grumphp": "^2.14",
         "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^9",
-        "squizlabs/php_codesniffer": "^3.7"
+        "phpunit/phpunit": "^12"
     },
     "config": {
         "preferred-install": {
@@ -77,7 +76,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.2.*"
+            "require": "7.3.*"
         }
     }
 }

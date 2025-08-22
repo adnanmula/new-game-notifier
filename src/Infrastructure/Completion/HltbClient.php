@@ -7,7 +7,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HltbClient
 {
-    private const string ENDPOINT = '/api/ouch/';
+    private const string ENDPOINT = '/api/seek/';
 
     public function __construct(
         private HttpClientInterface $hltbClient,

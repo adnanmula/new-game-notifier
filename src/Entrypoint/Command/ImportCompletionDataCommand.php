@@ -3,11 +3,12 @@
 namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
 use AdnanMula\Criteria\Criteria;
+use AdnanMula\Criteria\Filter\CompositeFilter;
 use AdnanMula\Criteria\Filter\Filter;
+use AdnanMula\Criteria\Filter\FilterOperator;
+use AdnanMula\Criteria\Filter\Filters;
 use AdnanMula\Criteria\Filter\FilterType;
 use AdnanMula\Criteria\FilterField\FilterField;
-use AdnanMula\Criteria\FilterGroup\AndFilterGroup;
-use AdnanMula\Criteria\FilterValue\FilterOperator;
 use AdnanMula\Criteria\FilterValue\IntFilterValue;
 use AdnanMula\Criteria\FilterValue\NullFilterValue;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
@@ -53,14 +54,12 @@ final class ImportCompletionDataCommand extends Command
         }
 
         $apps = $this->repository->search(new Criteria(
-            null,
-            $limit,
-            null,
-            new AndFilterGroup(
+            filters: new Filters(
                 FilterType::AND,
                 new Filter(new FilterField('completion_main'), new NullFilterValue(), FilterOperator::IS_NULL),
+                new CompositeFilter(FilterType::OR, ...$filters,),
             ),
-            new AndFilterGroup(FilterType::OR, ...$filters),
+            limit: $limit,
         ));
 
         foreach ($apps as $app) {

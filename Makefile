@@ -27,8 +27,12 @@ check: ## check games command, t=false to disable telegram notifications
 	UID=${UID} GID=${GID} docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check -t $(t)"
 
 .PHONY: install
-install: ## composer install for php container
-	UID=${UID} GID=${GID} docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/composer.phar install"
+install: ## composer install
+	UID=${UID} GID=${GID} docker compose -f ${FILE} exec --user=${UID} php sh -c "composer install"
+
+.PHONY: update
+update: ## composer update
+	UID=${UID} GID=${GID} docker compose -f ${FILE} exec --user=${UID} php sh -c "composer update"
 
 .PHONY: init
 init: ## run migrations
@@ -46,6 +50,9 @@ stan: ## pass phpstan
 cs: ## run phpcs checker
 	docker compose -f ${FILE} exec --user=${UID} php sh -c "phpcs --standard=phpcs.xml.dist"
 
+grump: ## run grumphp
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "grumphp run"
+
 .PHONY: ps
 ps: ## status from all containers
 	docker compose -f ${FILE} ps
@@ -57,7 +64,7 @@ import-everything:
 	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:games -rc"
 
 import-games-recent:
-	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:games-recent"
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:played-recent"
 
 import-reviews:
 	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:reviews"

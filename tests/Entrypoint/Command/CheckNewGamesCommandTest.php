@@ -41,8 +41,7 @@ final class CheckNewGamesCommandTest extends TestCase
         );
     }
 
-    /** @test */
-    public function given_telegram_disabled_then_do_not_send_group_messages(): void
+    public function testGivenTelegramDisabledThenDoNotSendGroupMessages(): void
     {
         $this->communicationClient->expects($this->never())->method('say');
 
@@ -73,8 +72,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->assertEquals(0, $result);
     }
 
-    /** @test */
-    public function given_telegram_enabled_then_send_group_messages(): void
+    public function testGivenTelegramEnabledThenSendGroupMessages(): void
     {
         $this->communicationClient->expects($this->exactly(2))->method('say');
 
@@ -105,8 +103,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->assertEquals(0, $result);
     }
 
-    /** @test */
-    public function given_missing_games_then_sync_them(): void
+    public function testGivenMissingGamesThenSyncThem(): void
     {
         $app1 = new App(10, 'game1', 'icon1');
         $app2 = new App(20, 'game2', 'icon2');
@@ -131,7 +128,7 @@ final class CheckNewGamesCommandTest extends TestCase
 
         $this->appRepository->expects($this->exactly(2))
             ->method('save')
-            ->withConsecutive([$app], [$app2]);
+            ->willReturnOnConsecutiveCalls([$app], [$app2]);
 
         $commandTester = new CommandTester($this->command);
         $result = $commandTester->execute(['-t' => 'false']);
@@ -139,8 +136,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->assertEquals(0, $result);
     }
 
-    /** @test */
-    public function given_no_missing_games_then_do_nothing(): void
+    public function givenNoMissingGamesThenDoNothing(): void
     {
         $app1 = new App(10, 'game1', 'icon1');
         $app2 = new App(20, 'game2', 'icon2');
@@ -173,8 +169,7 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->assertEquals(0, $result);
     }
 
-    /** @test */
-    public function given_bad_steam_response_then_log(): void
+    public function givenBadSteamResponseThenLog(): void
     {
         $this->communicationClient->expects($this->once())->method('log')->with('Fallo en GetOwnedGames');
         $this->expectException(FailedToLoadLibraryException::class);

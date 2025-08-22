@@ -8,6 +8,7 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
 final class LibraryObjectMother
 {
     private int $appCount;
+
     /** @var array<App> */
     private array $apps;
 

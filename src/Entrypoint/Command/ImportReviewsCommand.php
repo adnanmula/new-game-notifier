@@ -4,10 +4,10 @@ namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
 use AdnanMula\Criteria\Criteria;
 use AdnanMula\Criteria\Filter\Filter;
+use AdnanMula\Criteria\Filter\FilterOperator;
+use AdnanMula\Criteria\Filter\Filters;
 use AdnanMula\Criteria\Filter\FilterType;
 use AdnanMula\Criteria\FilterField\FilterField;
-use AdnanMula\Criteria\FilterGroup\AndFilterGroup;
-use AdnanMula\Criteria\FilterValue\FilterOperator;
 use AdnanMula\Criteria\FilterValue\NullFilterValue;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
@@ -47,13 +47,11 @@ final class ImportReviewsCommand extends Command
         if (null === $appIds) {
             $apps = $this->repository->search(
                 new Criteria(
-                    null,
-                    $limit,
-                    null,
-                    new AndFilterGroup(
+                    filters: new Filters(
                         FilterType::AND,
                         new Filter(new FilterField('review_score'), new NullFilterValue(), FilterOperator::IS_NULL),
                     ),
+                    limit: $limit,
                 ),
             );
 

@@ -4,10 +4,10 @@ namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
 use AdnanMula\Criteria\Criteria;
 use AdnanMula\Criteria\Filter\Filter;
+use AdnanMula\Criteria\Filter\FilterOperator;
+use AdnanMula\Criteria\Filter\Filters;
 use AdnanMula\Criteria\Filter\FilterType;
 use AdnanMula\Criteria\FilterField\FilterField;
-use AdnanMula\Criteria\FilterGroup\AndFilterGroup;
-use AdnanMula\Criteria\FilterValue\FilterOperator;
 use AdnanMula\Criteria\FilterValue\StringArrayFilterValue;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use Symfony\Component\Console\Command\Command;
@@ -48,10 +48,7 @@ final class GetGameDataCommand extends Command
         }
 
         $apps = $this->repository->search(new Criteria(
-            null,
-            null,
-            null,
-            new AndFilterGroup(
+            new Filters(
                 FilterType::OR,
                 new Filter(
                     new FilterField('app_id'),
