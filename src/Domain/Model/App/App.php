@@ -20,6 +20,7 @@ final class App
         public readonly ?int $completionAvg = null,
     ) {}
 
+    // phpcs:disable
     public string $url {
         get {
             return self::URL_APP . $this->appid;
@@ -37,4 +38,5 @@ final class App
             return 'https://cdn.akamai.steamstatic.com/steam/apps/' . $this->appid . '/header.jpg';
         }
     }
+    // phpcs:enable
 }

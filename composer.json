@@ -13,12 +13,12 @@
         "adnanmula/telegram-send-message": "^0.0.5",
         "doctrine/dbal": "^3.10",
         "robmorgan/phinx": "^0.16",
-        "symfony/console": "^7.3",
-        "symfony/dotenv": "^7.3",
+        "symfony/console": "^7.4",
+        "symfony/dotenv": "^7.4",
         "symfony/flex": "^2.4",
-        "symfony/framework-bundle": "^7.3",
-        "symfony/http-client": "7.3.*",
-        "symfony/yaml": "^7.3"
+        "symfony/framework-bundle": "^7.4",
+        "symfony/http-client": "^7.4",
+        "symfony/yaml": "^7.4"
     },
     "require-dev": {
         "adnanmula/coding-standard": "^0.0.13",
@@ -62,12 +62,14 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
-            "@auto-scripts",
-            "rm -rf .git/hooks",
-            "cp -r scripts/git-hooks .git/hooks"
+            "@auto-scripts"
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "post-autoload-dump": [
+            "rm -rf .git/hooks",
+            "cp -r scripts/git-hooks .git/hooks"
         ]
     },
     "conflict": {
@@ -76,7 +78,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.3.*"
+            "require": "7.4.*"
         }
     }
 }
