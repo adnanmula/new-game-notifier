@@ -8,6 +8,7 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\CompletionData;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository;
+use Doctrine\DBAL\ParameterType;
 
 final class AppDbalRepository extends DbalRepository implements AppRepository
 {
@@ -91,16 +92,16 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ),
         );
 
-        $stmt->bindValue('app_id', $app->appid, \PDO::PARAM_INT);
-        $stmt->bindValue('name', $app->name, \PDO::PARAM_STR);
-        $stmt->bindValue('icon', $app->icon, \PDO::PARAM_STR);
-        $stmt->bindValue('playtime', $app->playedTime, \PDO::PARAM_INT);
-        $stmt->bindValue('review_score', $app->reviewScore, \PDO::PARAM_INT);
-        $stmt->bindValue('review_amount', $app->reviewAmount, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_main', $app->completionMain, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_with_extras', $app->completionWithExtras, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_full', $app->completionFull, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_avg', $app->completionAvg, \PDO::PARAM_INT);
+        $stmt->bindValue('app_id', $app->appid, ParameterType::INTEGER);
+        $stmt->bindValue('name', $app->name, ParameterType::STRING);
+        $stmt->bindValue('icon', $app->icon, ParameterType::STRING);
+        $stmt->bindValue('playtime', $app->playedTime, ParameterType::INTEGER);
+        $stmt->bindValue('review_score', $app->reviewScore, ParameterType::INTEGER);
+        $stmt->bindValue('review_amount', $app->reviewAmount, ParameterType::INTEGER);
+        $stmt->bindValue('completion_main', $app->completionMain, ParameterType::INTEGER);
+        $stmt->bindValue('completion_with_extras', $app->completionWithExtras, ParameterType::INTEGER);
+        $stmt->bindValue('completion_full', $app->completionFull, ParameterType::INTEGER);
+        $stmt->bindValue('completion_avg', $app->completionAvg, ParameterType::INTEGER);
 
         $stmt->executeStatement();
     }
@@ -118,8 +119,8 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ),
         );
 
-        $stmt->bindValue('app_id', $appId, \PDO::PARAM_INT);
-        $stmt->bindValue('playtime', $amount, \PDO::PARAM_INT);
+        $stmt->bindValue('app_id', $appId, ParameterType::INTEGER);
+        $stmt->bindValue('playtime', $amount, ParameterType::INTEGER);
 
         $stmt->executeStatement();
     }
@@ -137,9 +138,9 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ),
         );
 
-        $stmt->bindValue('app_id', $appId, \PDO::PARAM_INT);
-        $stmt->bindValue('review_score', $score, \PDO::PARAM_INT);
-        $stmt->bindValue('review_amount', $amount, \PDO::PARAM_INT);
+        $stmt->bindValue('app_id', $appId, ParameterType::INTEGER);
+        $stmt->bindValue('review_score', $score, ParameterType::INTEGER);
+        $stmt->bindValue('review_amount', $amount, ParameterType::INTEGER);
 
         $stmt->executeStatement();
     }
@@ -159,11 +160,11 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             ),
         );
 
-        $stmt->bindValue('app_id', $appId, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_main', $completionData->completionMain, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_with_extras', $completionData->completionWithExtras, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_full', $completionData->completionFull, \PDO::PARAM_INT);
-        $stmt->bindValue('completion_avg', $completionData->completionAvg, \PDO::PARAM_INT);
+        $stmt->bindValue('app_id', $appId, ParameterType::INTEGER);
+        $stmt->bindValue('completion_main', $completionData->completionMain, ParameterType::INTEGER);
+        $stmt->bindValue('completion_with_extras', $completionData->completionWithExtras, ParameterType::INTEGER);
+        $stmt->bindValue('completion_full', $completionData->completionFull, ParameterType::INTEGER);
+        $stmt->bindValue('completion_avg', $completionData->completionAvg, ParameterType::INTEGER);
 
         $stmt->executeStatement();
     }
