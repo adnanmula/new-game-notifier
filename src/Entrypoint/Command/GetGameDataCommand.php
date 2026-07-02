@@ -10,15 +10,15 @@ use AdnanMula\Criteria\Filter\FilterType;
 use AdnanMula\Criteria\FilterField\FilterField;
 use AdnanMula\Criteria\FilterValue\StringArrayFilterValue;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'steam:get:games', description: 'Get game data')]
 final class GetGameDataCommand extends Command
 {
-    private const string NAME = 'steam:get:games';
-
     public function __construct(
         private readonly AppRepository $repository,
     ) {
@@ -27,9 +27,7 @@ final class GetGameDataCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME)
-            ->setDescription('Get game data')
-            ->addArgument('appIds', InputArgument::IS_ARRAY, 'App ids');
+        $this->addArgument('appIds', InputArgument::IS_ARRAY, 'App ids');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

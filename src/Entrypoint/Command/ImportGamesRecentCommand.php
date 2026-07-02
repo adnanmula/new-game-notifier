@@ -5,15 +5,15 @@ namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'steam:import:played-recent', description: 'Import recently played game time')]
 final class ImportGamesRecentCommand extends Command
 {
-    private const string NAME = 'steam:import:played-recent';
-
     public function __construct(
         private SteamClient $steamClient,
         private HltbClient $completionClient,
@@ -25,9 +25,7 @@ final class ImportGamesRecentCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME)
-            ->setDescription('Import recently played game time')
-            ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
+        $this->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
             ->addOption('completion', 'c', InputOption::VALUE_NONE, 'Import app completion data');
     }
 

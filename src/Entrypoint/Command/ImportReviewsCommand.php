@@ -12,15 +12,15 @@ use AdnanMula\Criteria\FilterValue\NullFilterValue;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'steam:import:reviews', description: 'Import review scores')]
 final class ImportReviewsCommand extends Command
 {
-    private const string NAME = 'steam:import:reviews';
-
     public function __construct(
         private SteamClient $client,
         private AppRepository $repository,
@@ -30,9 +30,7 @@ final class ImportReviewsCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME)
-            ->setDescription('Import review scores')
-            ->addOption('appIds', 'a', InputOption::VALUE_OPTIONAL, 'Comma separated app ids')
+        $this->addOption('appIds', 'a', InputOption::VALUE_OPTIONAL, 'Comma separated app ids')
             ->addOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Amount to import', 10);
     }
 

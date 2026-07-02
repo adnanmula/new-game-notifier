@@ -76,10 +76,8 @@ class HltbClient
             'playable teaser',
         ];
 
-        foreach ($toIgnore as $ignore) {
-            if (\str_ends_with($name, $ignore)) {
-                return null;
-            }
+        if (\array_any($toIgnore, static fn ($ignore) => \str_ends_with($name, $ignore))) {
+            return null;
         }
 
         $toRemove = [

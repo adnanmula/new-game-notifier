@@ -6,6 +6,12 @@ final class Json
 {
     public static function decode(string $json): array
     {
-        return \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+        $value = \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+
+        if (false === \is_array($value)) {
+            throw new \RuntimeException('Invalid JSON data');
+        }
+
+        return $value;
     }
 }

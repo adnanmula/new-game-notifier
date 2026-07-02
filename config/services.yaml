@@ -10,6 +10,7 @@ services:
         bind:
             string $steamUserId: '%env(STEAM_ID_64)%'
             string $apiKey: '%env(STEAM_API_KEY)%'
+            string $dbUrl: '%db_url%'
             string $telegramToken: '%env(TELEGRAM_TOKEN)%'
             string $groupChatId: '%env(TELEGRAM_GROUP_CHAT_ID)%'
             string $adminChatId: '%env(TELEGRAM_ADMIN_CHAT_ID)%'
@@ -19,17 +20,15 @@ services:
 
     repository.dbal.connection:
         class: Doctrine\DBAL\Connection
-        factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
+        factory: 'AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\ConnectionFactory::create'
         arguments:
-            - url: '%db_url%'
-              driver: 'pdo_pgsql'
+            - '%db_url%'
 
     repository.dbal.connection_default:
         class: Doctrine\DBAL\Connection
-        factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
+        factory: 'AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\ConnectionFactory::create'
         arguments:
-            - url: '%db_url_default%'
-              driver: 'pdo_pgsql'
+            - '%db_url_default%'
 
     AdnanMula\Steam\NewGameNotifier\Domain\:
         resource: '../src/Domain'

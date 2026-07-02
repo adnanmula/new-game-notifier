@@ -8,15 +8,15 @@ use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadL
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'steam:import:games', description: 'Import games')]
 final class ImportGamesNewCommand extends Command
 {
-    private const string NAME = 'steam:import:games';
-
     public function __construct(
         private SteamClient $steamClient,
         private HltbClient $completionClient,
@@ -29,9 +29,7 @@ final class ImportGamesNewCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME)
-            ->setDescription('Import games')
-            ->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
+        $this->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
             ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
             ->addOption('completion', 'c', InputOption::VALUE_NONE, 'Import app completion data');
     }
