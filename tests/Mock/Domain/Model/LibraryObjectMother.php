@@ -3,7 +3,7 @@
 namespace AdnanMula\Steam\NewGameNotifier\Tests\Mock\Domain\Model;
 
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
-use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\Library;
 
 final class LibraryObjectMother
 {

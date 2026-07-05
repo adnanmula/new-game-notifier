@@ -14,10 +14,7 @@ final class App
         public readonly int $playedTime = 0,
         public readonly ?int $reviewScore = null,
         public readonly ?int $reviewAmount = null,
-        public readonly ?int $completionMain = null,
-        public readonly ?int $completionWithExtras = null,
-        public readonly ?int $completionFull = null,
-        public readonly ?int $completionAvg = null,
+        public readonly ?AppCompatibility $compatibility = null,
     ) {}
 
     // phpcs:disable

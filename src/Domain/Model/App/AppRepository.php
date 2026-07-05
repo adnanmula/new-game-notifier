@@ -3,7 +3,6 @@
 namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\App;
 
 use AdnanMula\Criteria\Criteria;
-use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\CompletionData;
 
 interface AppRepository
 {
@@ -16,5 +15,5 @@ interface AppRepository
     public function save(App $app): void;
     public function updatePlaytime(int $appId, int $amount): void;
     public function updateReviewScore(int $appId, int $score, int $amount): void;
-    public function updateCompletionData(int $appId, CompletionData $completionData): void;
+    public function updateCompatibilityData(int $appId, AppCompatibility $compatibilityData): void;
 }

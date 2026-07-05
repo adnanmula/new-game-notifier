@@ -28,7 +28,7 @@ Then set up the check command in crontab.
 
 -t enables telegram notifications
 -r enables review score import
--c enables completion time info import from howlongtobeat.com
+-c enables compatibility info import from ProtonDB
 ```
 
 View imported data directly from the database or using the following command (it accepts multiple appids as argument) 
@@ -42,9 +42,5 @@ Example result:
 > Terraria (105600)
  - Playtime: 13206m
  - Score: 97% (547965 reviews)
- - Completion time
-  - Main: 52h
-  - With extras: 93h
-  - Avg: 105h
-  - Full: 200h
+ - Compatibily platinum
 ```

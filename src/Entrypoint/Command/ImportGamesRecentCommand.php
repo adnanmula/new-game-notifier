@@ -3,7 +3,7 @@
 namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\ProtondbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +16,7 @@ final class ImportGamesRecentCommand extends Command
 {
     public function __construct(
         private SteamClient $steamClient,
-        private HltbClient $completionClient,
+        private ProtondbClient $compatibilityClient,
         private AppRepository $repository,
         private string $steamUserId,
     ) {
@@ -26,13 +26,13 @@ final class ImportGamesRecentCommand extends Command
     protected function configure(): void
     {
         $this->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
-            ->addOption('completion', 'c', InputOption::VALUE_NONE, 'Import app completion data');
+            ->addOption('compatibility', 'c', InputOption::VALUE_NONE, 'Import app compatibility data');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $importReview = $input->getOption('reviews');
-        $importCompletion = $input->getOption('completion');
+        $importCompatibility = $input->getOption('compatibility');
         $apps = $this->steamClient->recentlyPlayedGames($this->steamUserId);
 
         foreach ($apps as $app) {
@@ -52,18 +52,12 @@ final class ImportGamesRecentCommand extends Command
                 $output->writeln(' | Review imported');
             }
 
-            if ($importCompletion) {
-                $completionData = $this->completionClient->completionData($app->name);
-
-                if (null === $completionData) {
-                    $output->writeln(' | Cant import completion data');
-                } else {
-                    $this->repository->updateCompletionData($app->appid, $completionData);
-
-                    $output->writeln(' | Completion data imported');
-                }
-
-                $output->writeln(' | Completion data imported');
+            if ($importCompatibility) {
+                $this->repository->updateCompatibilityData(
+                    $app->appid,
+                    $this->compatibilityClient->compatibility($app->appid),
+                );
+                $output->writeln(' | Compatibility data imported');
             }
         }
 

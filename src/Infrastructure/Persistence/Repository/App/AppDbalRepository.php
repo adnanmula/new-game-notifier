@@ -5,8 +5,8 @@ namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\
 use AdnanMula\Criteria\Criteria;
 use AdnanMula\Criteria\DbalCriteriaAdapter;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppCompatibility;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\CompletionData;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Persistence\Repository\DbalRepository;
 use Doctrine\DBAL\ParameterType;
 
@@ -17,8 +17,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
     public function app(int $appId): ?App
     {
         $result = $this->connection->createQueryBuilder()
-            ->select('a.app_id, a.name, a.icon, a.playtime, a.review_score')
-            ->addSelect('a.completion_main, a.completion_with_extras, a.completion_full, a.completion_avg')
+            ->select('a.app_id, a.name, a.icon, a.playtime, a.review_score, a.compatibility')
             ->from(self::TABLE, 'a')
             ->where('a.app_id = :appId')
             ->setParameter('appId', $appId)
@@ -74,8 +73,8 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt = $this->connection->prepare(
             \sprintf(
                 '
-                    INSERT INTO %s (app_id, name, icon, playtime, review_score, review_amount, completion_main, completion_with_extras, completion_full, completion_avg)
-                    VALUES (:app_id, :name, :icon, :playtime, :review_score, :review_amount, :completion_main, :completion_with_extras, :completion_full, :completion_avg)
+                    INSERT INTO %s (app_id, name, icon, playtime, review_score, review_amount, compatibility)
+                    VALUES (:app_id, :name, :icon, :playtime, :review_score, :review_amount, :compatibility)
                     ON CONFLICT (app_id) DO UPDATE SET 
                     app_id = :app_id,
                     name = :name,
@@ -83,10 +82,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
                     playtime = :playtime,
                     review_score = :review_score,
                     review_amount = :review_amount,
-                    completion_main = :completion_main,
-                    completion_with_extras = :completion_with_extras,
-                    completion_full = :completion_full,
-                    completion_avg = :completion_avg
+                    compatibility = :compatibility
                 ',
                 self::TABLE,
             ),
@@ -98,10 +94,7 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->bindValue('playtime', $app->playedTime, ParameterType::INTEGER);
         $stmt->bindValue('review_score', $app->reviewScore, ParameterType::INTEGER);
         $stmt->bindValue('review_amount', $app->reviewAmount, ParameterType::INTEGER);
-        $stmt->bindValue('completion_main', $app->completionMain, ParameterType::INTEGER);
-        $stmt->bindValue('completion_with_extras', $app->completionWithExtras, ParameterType::INTEGER);
-        $stmt->bindValue('completion_full', $app->completionFull, ParameterType::INTEGER);
-        $stmt->bindValue('completion_avg', $app->completionAvg, ParameterType::INTEGER);
+        $stmt->bindValue('compatibility', $app->compatibility?->value, ParameterType::STRING);
 
         $stmt->executeStatement();
     }
@@ -145,26 +138,17 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
         $stmt->executeStatement();
     }
 
-    public function updateCompletionData(int $appId, CompletionData $completionData): void
+    public function updateCompatibilityData(int $appId, AppCompatibility $compatibilityData): void
     {
         $stmt = $this->connection->prepare(
             \sprintf(
-                'UPDATE %s SET
-                completion_main = :completion_main,
-                completion_with_extras = :completion_with_extras,
-                completion_full = :completion_full,
-                completion_avg = :completion_avg
-                WHERE app_id = :app_id;
-                ',
+                'UPDATE %s SET compatibility = :compatibility WHERE app_id = :app_id;',
                 self::TABLE,
             ),
         );
 
         $stmt->bindValue('app_id', $appId, ParameterType::INTEGER);
-        $stmt->bindValue('completion_main', $completionData->completionMain, ParameterType::INTEGER);
-        $stmt->bindValue('completion_with_extras', $completionData->completionWithExtras, ParameterType::INTEGER);
-        $stmt->bindValue('completion_full', $completionData->completionFull, ParameterType::INTEGER);
-        $stmt->bindValue('completion_avg', $completionData->completionAvg, ParameterType::INTEGER);
+        $stmt->bindValue('compatibility', $compatibilityData->value, ParameterType::STRING);
 
         $stmt->executeStatement();
     }
@@ -179,10 +163,9 @@ final class AppDbalRepository extends DbalRepository implements AppRepository
             $result['playtime'],
             $result['review_score'],
             $result['review_amount'],
-            $result['completion_main'],
-            $result['completion_with_extras'],
-            $result['completion_full'],
-            $result['completion_avg'],
+            null === $result['compatibility']
+                ? null
+                : AppCompatibility::from($result['compatibility']),
         );
     }
 }

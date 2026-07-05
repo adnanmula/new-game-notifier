@@ -5,7 +5,7 @@ namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Communication;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
 use AdnanMula\Telegram\SendMessage\TelegramClient as Client;
 
-final class TelegramClient implements CommunicationClient
+final readonly class TelegramClient implements CommunicationClient
 {
     private Client $client;
 

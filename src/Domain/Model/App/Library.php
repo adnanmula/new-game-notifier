@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\Library;
-
-use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+namespace AdnanMula\Steam\NewGameNotifier\Domain\Model\App;
 
 final readonly class Library
 {
