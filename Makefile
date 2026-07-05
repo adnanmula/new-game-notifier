@@ -69,5 +69,5 @@ import-games-recent:
 import-reviews:
 	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:reviews"
 
-import-completions:
-	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:completions"
+import-compatibility:
+	docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console steam:import:compatibility"

@@ -4,10 +4,10 @@ namespace AdnanMula\Steam\NewGameNotifier\Tests\Entrypoint\Command;
 
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\Exception\FailedToLoadLibraryException;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
 use AdnanMula\Steam\NewGameNotifier\Entrypoint\Command\ImportGamesNewCommand;
-use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\ProtondbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
 use AdnanMula\Steam\NewGameNotifier\Tests\Mock\Domain\Model\LibraryObjectMother;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 final class CheckNewGamesCommandTest extends TestCase
 {
     private MockObject $steamClient;
-    private MockObject $completionClient;
+    private MockObject $compatibilityClient;
     private MockObject $communicationClient;
     private MockObject $appRepository;
     private string $userId;
@@ -27,14 +27,14 @@ final class CheckNewGamesCommandTest extends TestCase
     public function setUp(): void
     {
         $this->steamClient = $this->createMock(SteamClient::class);
-        $this->completionClient = $this->createMock(HltbClient::class);
+        $this->compatibilityClient = $this->createMock(ProtondbClient::class);
         $this->communicationClient = $this->createMock(CommunicationClient::class);
         $this->appRepository = $this->createMock(AppRepository::class);
         $this->userId = '70000000';
 
         $this->command = new ImportGamesNewCommand(
             $this->steamClient,
-            $this->completionClient,
+            $this->compatibilityClient,
             $this->communicationClient,
             $this->appRepository,
             $this->userId,
@@ -53,18 +53,20 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2);
         $library = $provider->build();
 
-        $this->steamClient->expects($this->once())
+        $this->steamClient->expects(self::once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
 
-        $this->appRepository->expects($this->once())
+        $this->appRepository->expects(self::once())
             ->method('all')
             ->willReturn([$app2->appid]);
 
-        $this->appRepository->expects($this->once())
+        $this->appRepository->expects(self::once())
             ->method('save')
             ->with($app1);
+
+        $this->compatibilityClient->expects(self::never())->method('compatibility');
 
         $commandTester = new CommandTester($this->command);
         $result = $commandTester->execute([]);
@@ -84,18 +86,20 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2);
         $library = $provider->build();
 
-        $this->steamClient->expects($this->once())
+        $this->steamClient->expects(self::once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
 
-        $this->appRepository->expects($this->once())
+        $this->appRepository->expects(self::once())
             ->method('all')
             ->willReturn([$library->apps[0]->appid]);
 
-        $this->appRepository->expects($this->once())
+        $this->appRepository->expects(self::once())
             ->method('save')
             ->with($app2);
+
+        $this->compatibilityClient->expects(self::never())->method('compatibility');
 
         $commandTester = new CommandTester($this->command);
         $result = $commandTester->execute(['-t' => 'true']);
@@ -114,12 +118,12 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2, $app3);
         $library = $provider->build();
 
-        $this->steamClient->expects($this->once())
+        $this->steamClient->expects(self::once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
 
-        $this->appRepository->expects($this->once())
+        $this->appRepository->expects(self::once())
             ->method('all')
             ->willReturn([$app1->appid]);
 
@@ -129,6 +133,10 @@ final class CheckNewGamesCommandTest extends TestCase
         $this->appRepository->expects($this->exactly(2))
             ->method('save')
             ->willReturnOnConsecutiveCalls([$app], [$app2]);
+
+        $this->compatibilityClient->expects(self::never())->method('compatibility');
+        $this->communicationClient->expects(self::never())->method('log');
+        $this->communicationClient->expects(self::exactly(3))->method('say');
 
         $commandTester = new CommandTester($this->command);
         $result = $commandTester->execute(['-t' => 'false']);
@@ -147,12 +155,12 @@ final class CheckNewGamesCommandTest extends TestCase
         $provider->addApps($app1, $app2, $app3);
         $library = $provider->build();
 
-        $this->steamClient->expects($this->once())
+        $this->steamClient->expects(self::once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn($library);
 
-        $this->appRepository->expects($this->once())
+        $this->appRepository->expects(self::once())
             ->method('all')
             ->willReturn([
                 $app1->appid,
@@ -171,10 +179,10 @@ final class CheckNewGamesCommandTest extends TestCase
 
     public function givenBadSteamResponseThenLog(): void
     {
-        $this->communicationClient->expects($this->once())->method('log')->with('Fallo en GetOwnedGames');
+        $this->communicationClient->expects(self::once())->method('log')->with('Fallo en GetOwnedGames');
         $this->expectException(FailedToLoadLibraryException::class);
 
-        $this->steamClient->expects($this->once())
+        $this->steamClient->expects(self::once())
             ->method('ownedGames')
             ->with($this->userId)
             ->willReturn(null);

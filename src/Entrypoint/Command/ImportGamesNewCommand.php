@@ -3,23 +3,24 @@
 namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppCompatibility;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
-use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Exception\FailedToLoadLibraryException;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\Exception\FailedToLoadLibraryException;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
-use AdnanMula\Steam\NewGameNotifier\Infrastructure\Completion\HltbClient;
+use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\ProtondbClient;
 use AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam\SteamClient;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'steam:import:games', description: 'Import games')]
 final class ImportGamesNewCommand extends Command
 {
-    private const string NAME = 'steam:import:games';
-
     public function __construct(
         private SteamClient $steamClient,
-        private HltbClient $completionClient,
+        private ProtondbClient $compatibilityClient,
         private CommunicationClient $communicationClient,
         private AppRepository $appRepository,
         private string $steamUserId,
@@ -29,24 +30,21 @@ final class ImportGamesNewCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME)
-            ->setDescription('Import games')
-            ->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
+        $this->addOption('notifications', 't', InputOption::VALUE_NONE, 'Telegram notifications')
             ->addOption('reviews', 'r', InputOption::VALUE_NONE, 'Import app review score')
-            ->addOption('completion', 'c', InputOption::VALUE_NONE, 'Import app completion data');
+            ->addOption('compatibility', 'c', InputOption::VALUE_NONE, 'Import app compatibility data');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $notificationsEnabled = $input->getOption('notifications');
         $importReview = $input->getOption('reviews');
-        $importCompletion = $input->getOption('completion');
-
+        $importCompatibility = $input->getOption('compatibility');
         $library = $this->steamClient->ownedGames($this->steamUserId);
 
         if (null === $library) {
             if ($notificationsEnabled) {
-                $this->communicationClient->log('Fallo en GetOwnedGames');
+                $this->communicationClient->log('Error on GetOwnedGames');
             }
 
             throw new FailedToLoadLibraryException();
@@ -58,7 +56,7 @@ final class ImportGamesNewCommand extends Command
         );
 
         $toNotify = \array_map(
-            function (int $missing) use ($library, $importReview, $importCompletion, $output) {
+            function (int $missing) use ($library, $importReview, $importCompatibility, $output) {
                 $app = $library->app($missing);
 
                 if (null === $app) {
@@ -76,16 +74,15 @@ final class ImportGamesNewCommand extends Command
                     $output->writeln(' | Review imported');
                 }
 
-                if ($importCompletion) {
-                    $completionData = $this->completionClient->completionData($app->name);
-
-                    if (null === $completionData) {
-                        $output->writeln(' | Cant import completion data');
-                    } else {
-                        $this->appRepository->updateCompletionData($app->appid, $completionData);
-
-                        $output->writeln(' | Completion data imported');
+                if ($importCompatibility) {
+                    try {
+                        $compatibilityData = $this->compatibilityClient->compatibility($app->appid);
+                    } catch (\Throwable) {
+                        $compatibilityData = AppCompatibility::UNKNOWN;
                     }
+
+                    $this->appRepository->updateCompatibilityData($app->appid, $compatibilityData);
+                    $output->writeln(' | Compatibility imported ' . $compatibilityData->value);
                 }
 
                 return $app;

@@ -3,12 +3,12 @@
 namespace AdnanMula\Steam\NewGameNotifier\Infrastructure\Steam;
 
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
-use AdnanMula\Steam\NewGameNotifier\Domain\Model\Library\Library;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\Library;
 use AdnanMula\Steam\NewGameNotifier\Shared\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class SteamClient
+readonly class SteamClient
 {
     private const string ENDPOINT_OWNED_GAMES = 'IPlayerService/GetOwnedGames/v0001/';
     private const string ENDPOINT_RECENT_PLAYED_GAMES = 'IPlayerService/GetRecentlyPlayedGames/v1/';
