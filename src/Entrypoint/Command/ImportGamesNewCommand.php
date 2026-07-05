@@ -3,6 +3,7 @@
 namespace AdnanMula\Steam\NewGameNotifier\Entrypoint\Command;
 
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\App;
+use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppCompatibility;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\AppRepository;
 use AdnanMula\Steam\NewGameNotifier\Domain\Model\App\Exception\FailedToLoadLibraryException;
 use AdnanMula\Steam\NewGameNotifier\Domain\Service\Communication\CommunicationClient;
@@ -74,10 +75,14 @@ final class ImportGamesNewCommand extends Command
                 }
 
                 if ($importCompatibility) {
-                    $this->appRepository->updateCompatibilityData(
-                        $app->appid,
-                        $this->compatibilityClient->compatibility($app->appid),
-                    );
+                    try {
+                        $compatibilityData = $this->compatibilityClient->compatibility($app->appid);
+                    } catch (\Throwable) {
+                        $compatibilityData = AppCompatibility::UNKNOWN;
+                    }
+
+                    $this->appRepository->updateCompatibilityData($app->appid, $compatibilityData);
+                    $output->writeln(' | Compatibility imported ' . $compatibilityData->value);
                 }
 
                 return $app;
