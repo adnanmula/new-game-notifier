@@ -22,10 +22,6 @@ stop: ## stop all containers
 down: ## down all containers
 	UID=${UID} GID=${GID} docker compose -f ${FILE} down
 
-.PHONY: check
-check: ## check games command, t=false to disable telegram notifications
-	UID=${UID} GID=${GID} docker compose -f ${FILE} exec --user=${UID} php sh -c "php bin/console new-game-notifier:check -t $(t)"
-
 .PHONY: install
 install: ## composer install
 	UID=${UID} GID=${GID} docker compose -f ${FILE} exec --user=${UID} php sh -c "composer install"

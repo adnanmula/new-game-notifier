@@ -21,7 +21,7 @@
         "symfony/yaml": "^8.1"
     },
     "require-dev": {
-        "adnanmula/coding-standard": "^0.0.13",
+        "adnanmula/coding-standard": "^0.0.14",
         "phpro/grumphp": "^2.14",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12"
